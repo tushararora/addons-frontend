@@ -51,24 +51,24 @@ describe('landing reducer', () => {
 
   describe('LANDING_LOADED', () => {
     it('sets the results', () => {
+      const entities = {
+        addons: {
+          bar: { slug: 'bar' },
+          foo: { slug: 'foo' },
+          food: { slug: 'food' },
+        },
+      };
       const { featured, highlyRated, popular } = landing(undefined, {
         type: 'LANDING_LOADED',
         payload: {
           addonType: 'theme',
-          featured: { result: { count: 2, results: ['foo', 'food'] } },
-          highlyRated: { result: { count: 0, results: [] } },
-          popular: { result: { count: 0, results: [] } },
-          entities: {
-            addons: {
-              bar: { slug: 'bar' },
-              foo: { slug: 'foo' },
-              food: { slug: 'food' },
-            },
-          },
+          featured: { entities, result: { count: 2, results: ['foo', 'bar'] } },
+          highlyRated: { entities, result: { count: 0, results: [] } },
+          popular: { entities, result: { count: 0, results: [] } },
         },
       });
       assert.equal(featured.count, 2);
-      assert.deepEqual(featured.results, [{ slug: 'foo' }, { slug: 'food' }]);
+      assert.deepEqual(featured.results, [{ slug: 'foo' }, { slug: 'bar' }]);
       assert.deepEqual(highlyRated, { count: 0, results: [] });
       assert.deepEqual(popular, { count: 0, results: [] });
     });

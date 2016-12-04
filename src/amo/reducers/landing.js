@@ -23,7 +23,9 @@ export default function landing(state = initialState, action) {
       ['featured', 'highlyRated', 'popular'].forEach((key) => {
         newState[key] = {
           count: payload[key].result.count,
-          results: payload[key].result.results.map((slug) => payload.entities.addons[slug]),
+          results: payload[key].result.results.map(
+            (slug) => payload[key].entities.addons[slug]
+          ),
         };
       });
 
