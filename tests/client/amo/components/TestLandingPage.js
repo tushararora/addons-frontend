@@ -101,7 +101,36 @@ describe('<LandingPage />', () => {
     );
   });
 
-  it('throws if add-on type is not supported', () => {
+  it('renders not found if add-on type is not supported', () => {
+    const root = render({ addonType: 'XUL' });
+    assert.include(root.textContent, 'Page not found');
+  });
+
+  it('logs a debug message when add-on type is not supported ', () => {
+    const fakeError = new Error('not found in API_ADDON_TYPES_MAPPING');
+    const fakeApiAddonType = () => { throw fakeError; };
+    const fakeLog = { debug: sinon.stub() };
+    const store = createStore(initialState);
+
+    mapStateToProps(
+      store.getState(),
+      { params: { visibleAddonType: 'themes' } },
+      fakeApiAddonType,
+      fakeLog
+    );
+
+    assert.ok(
+      fakeLog.debug.calledWith(
+        'apiAddonType not found; this is likely a 404.', fakeError)
+    );
+  });
+
+  it('throws an error if a different error is encountered ', () => {
+    const fakeError = new Error('Ice Cream Error');
+    const fakeApiAddonType = () => { throw fakeError; };
+    const fakeLog = { debug: sinon.stub() };
+    const store = createStore(initialState);
+
     assert.throws(() => {
       render({ addonType: 'XUL' });
     }, 'No LandingPage content for addonType: XUL');

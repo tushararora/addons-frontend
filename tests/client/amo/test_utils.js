@@ -1,3 +1,6 @@
+import NotAuthorized from 'amo/components/NotAuthorized';
+import NotFound from 'amo/components/NotFound';
+import ServerError from 'amo/components/ServerError';
 import createStore from 'amo/store';
 import * as featuredActions from 'amo/actions/featured';
 import * as landingActions from 'amo/actions/landing';
@@ -9,9 +12,11 @@ import {
   SEARCH_SORT_TOP_RATED,
 } from 'core/constants';
 import {
+  getErrorComponent,
   loadFeaturedAddons,
   loadLandingAddons,
 } from 'amo/utils';
+import { unexpectedSuccess } from 'tests/client/helpers';
 
 
 describe('amo/utils', () => {
@@ -86,6 +91,36 @@ describe('amo/utils', () => {
         .then(() => {
           mockApi.verify();
         });
+    });
+
+    it('returns a rejected Promise if the addonsType is wrong', () => {
+      ownProps.params.visibleAddonType = '404';
+      const store = createStore({ application: 'android' });
+
+      return loadLandingAddons({ store, params: ownProps.params })
+        .then(unexpectedSuccess)
+        .catch((err) => {
+          assert.equal(
+            err.message, '"404" not found in API_ADDON_TYPES_MAPPING');
+        });
+    });
+  });
+
+  describe('getErrorComponent', () => {
+    it('returns a NotAuthorized component for 401 errors', () => {
+      assert.deepEqual(getErrorComponent(401), NotAuthorized);
+    });
+
+    it('returns a NotFound component for 404 errors', () => {
+      assert.deepEqual(getErrorComponent(404), NotFound);
+    });
+
+    it('returns a ServerError component for 500 errors', () => {
+      assert.deepEqual(getErrorComponent(500), ServerError);
+    });
+
+    it('returns a ServerError component by default', () => {
+      assert.deepEqual(getErrorComponent(501), ServerError);
     });
   });
 });

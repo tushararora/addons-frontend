@@ -10,16 +10,14 @@ import helmet from 'helmet';
 import cookie from 'react-cookie';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
+import NestedStatus from 'react-nested-status';
 import { Provider } from 'react-redux';
 import { match } from 'react-router';
 import { ReduxAsyncConnect, loadOnServer } from 'redux-connect';
 import WebpackIsomorphicTools from 'webpack-isomorphic-tools';
 
+import { REDUX_CONNECT_LOAD_FAIL } from 'core/constants';
 import ServerHtml from 'core/containers/ServerHtml';
-import {
-  getErrorMsg,
-  getReduxConnectError,
-} from 'core/resourceErrors/reduxConnectErrors';
 import { prefixMiddleWare } from 'core/middleware';
 import { convertBoolean } from 'core/utils';
 import { setClientApp, setLang, setJwt } from 'core/actions';
@@ -54,17 +52,52 @@ function getNoScriptStyles({ appName }) {
   return undefined;
 }
 
-function showErrorPage(res, status) {
-  let adjustedStatus = status;
-  let error = getErrorMsg(adjustedStatus);
-  if (!error) {
-    adjustedStatus = 500;
-    error = getErrorMsg(adjustedStatus);
-  }
-  return res.status(adjustedStatus).end(error);
-}
-
 const appName = config.get('appName');
+
+function showErrorPage(res, createStore, status, error = {}) {
+  const store = createStore();
+
+  // Get SRI for deployed services only.
+  const sriData = (isDeployed) ? JSON.parse(
+    fs.readFileSync(path.join(config.get('basePath'), 'dist/sri.json'))
+  ) : {};
+
+  // Check the lang supplied by res.locals.lang for validity
+  // or fall-back to the default.
+  const lang = isValidLang(res.locals.lang) ?
+    res.locals.lang : config.get('defaultLang');
+  const dir = getDirection(lang);
+  store.dispatch(setLang(lang));
+  if (res.locals.clientApp) {
+    store.dispatch(setClientApp(res.locals.clientApp));
+  } else {
+    log.warn(`No clientApp for this ${status} error page`);
+  }
+
+  store.dispatch({
+    type: REDUX_CONNECT_LOAD_FAIL,
+    payload: { error: { response: { status }, ...error } },
+  });
+
+  const pageProps = {
+    appName,
+    assets: webpackIsomorphicTools.assets(),
+    htmlLang: lang,
+    htmlDir: dir,
+    includeSri: isDeployed,
+    noScriptStyles: '',
+    sriData,
+    store,
+    trackingEnabled: convertBoolean(config.get('trackingEnabled')),
+  };
+
+  const HTML = ReactDOM.renderToString(
+    <ServerHtml {...pageProps} />);
+  const httpStatus = NestedStatus.rewind();
+  return res.status(status || httpStatus)
+    .send(`<!DOCTYPE html>\n${HTML}`)
+    .end();
+}
 
 function logRequests(req, res, next) {
   const start = new Date();
@@ -160,15 +193,6 @@ function baseServer(routes, createStore, { appInstanceName = appName } = {}) {
     ) => {
       cookie.plugToRequest(req, res);
 
-      if (err) {
-        log.error({ err, req });
-        return showErrorPage(res, 500);
-      }
-
-      if (!renderProps) {
-        return showErrorPage(res, 404);
-      }
-
       const store = createStore();
       const token = cookie.load(config.get('cookieName'));
       if (token) {
@@ -192,6 +216,10 @@ function baseServer(routes, createStore, { appInstanceName = appName } = {}) {
         log.warn(`No clientApp for this URL: ${req.url}`);
       }
 
+      if (!renderProps) {
+        return showErrorPage(res, createStore, 404);
+      }
+
       function hydrateOnClient(props = {}) {
         const pageProps = {
           appName: appInstanceName,
@@ -208,7 +236,8 @@ function baseServer(routes, createStore, { appInstanceName = appName } = {}) {
 
         const HTML = ReactDOM.renderToString(
           <ServerHtml {...pageProps} />);
-        res.send(`<!DOCTYPE html>\n${HTML}`);
+        const httpStatus = NestedStatus.rewind();
+        res.status(httpStatus).send(`<!DOCTYPE html>\n${HTML}`);
       }
 
       // Set disableSSR to true to debug
@@ -243,17 +272,17 @@ function baseServer(routes, createStore, { appInstanceName = appName } = {}) {
             </I18nProvider>
           );
 
-          const asyncConnectLoadState = store.getState().reduxAsyncConnect.loadState || {};
-          const reduxResult = getReduxConnectError(asyncConnectLoadState);
-          if (reduxResult.status) {
-            return showErrorPage(res, reduxResult.status);
+          const errorPage = store.getState().errorPage;
+          if (errorPage && errorPage.hasError) {
+            return showErrorPage(
+              res, createStore, errorPage.statusCode, errorPage.error);
           }
 
           return hydrateOnClient({ component: InitialComponent });
         })
         .catch((error) => {
           log.error({ err: error });
-          return showErrorPage(res, 500);
+          return showErrorPage(res, createStore, 500, error);
         });
     });
   });
@@ -261,7 +290,7 @@ function baseServer(routes, createStore, { appInstanceName = appName } = {}) {
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     log.error({ err });
-    return showErrorPage(res, 500);
+    return showErrorPage(res, createStore, 500, err);
   });
 
   return app;

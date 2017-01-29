@@ -108,7 +108,20 @@ export class LandingPageBase extends React.Component {
   }
 }
 
-export function mapStateToProps(state, ownProps) {
+export function mapStateToProps(
+  state, ownProps, _apiAddonType = apiAddonType, _log = log
+) {
+  let addonType;
+  try {
+    addonType = _apiAddonType(ownProps.params.visibleAddonType);
+  } catch (err) {
+    if (err.message.match('not found in API_ADDON_TYPES_MAPPING')) {
+      _log.debug('apiAddonType not found; this is likely a 404.', err);
+    } else {
+      throw err;
+    }
+  }
+
   return {
     addonType: apiAddonType(ownProps.params.visibleAddonType),
     featuredAddons: state.landing.featured.results,

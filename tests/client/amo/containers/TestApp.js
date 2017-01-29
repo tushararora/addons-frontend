@@ -1,23 +1,27 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import { renderIntoDocument } from 'react-addons-test-utils';
-import { loadFail as reduxConnectLoadFail } from 'redux-connect/lib/store';
 
 import {
-  // eslint-disable-next-line import/no-named-default
-  default as WrappedApp,
   AppBase,
   mapDispatchToProps,
   mapStateToProps,
 } from 'amo/containers/App';
 import createStore from 'amo/store';
 import { setClientApp, setLang } from 'core/actions';
-import * as api from 'core/api';
 import { INSTALL_STATE } from 'core/constants';
 import { getFakeI18nInst } from 'tests/client/helpers';
 
 
 describe('App', () => {
+  class FakeErrorPageComponent extends React.Component {
+    render() {
+      // eslint-disable-next-line react/prop-types
+      return <div>{this.props.children}</div>;
+    }
+  }
+
+  // eslint-disable-next-line react/no-multi-comp
   class FakeFooterComponent extends React.Component {
     render() {
       return <footer />;
@@ -54,6 +58,7 @@ describe('App', () => {
         InfoDialogComponent={FakeInfoDialogComponent}
         MastHeadComponent={FakeMastHeadComponent}
         SearchFormComponent={FakeSearchFormComponent}
+        ErrorPageComponent={FakeErrorPageComponent}
         {...props}>
         {children}
       </AppBase>
@@ -95,36 +100,24 @@ describe('App', () => {
 
   it('sets isHomePage to true when on the root path', () => {
     const location = { pathname: '/en-GB/android/' };
-    const root = renderIntoDocument(<AppBase i18n={getFakeI18nInst()}
-      FooterComponent={FakeFooterComponent}
-      InfoDialogComponent={FakeInfoDialogComponent}
-      MastHeadComponent={FakeMastHeadComponent}
-      SearchFormComponent={FakeSearchFormComponent}
-      clientApp="android" lang="en-GB" location={location} />);
+    const root = render({
+      clientApp: 'android', lang: 'en-GB', location });
 
     assert.isTrue(root.mastHead.props.isHomePage);
   });
 
   it('sets isHomePage to true when on the root path without a slash', () => {
     const location = { pathname: '/en-GB/android' };
-    const root = renderIntoDocument(<AppBase i18n={getFakeI18nInst()}
-      FooterComponent={FakeFooterComponent}
-      InfoDialogComponent={FakeInfoDialogComponent}
-      MastHeadComponent={FakeMastHeadComponent}
-      SearchFormComponent={FakeSearchFormComponent}
-      clientApp="android" lang="en-GB" location={location} />);
+    const root = render({
+      clientApp: 'android', lang: 'en-GB', location });
 
     assert.isTrue(root.mastHead.props.isHomePage);
   });
 
   it('sets isHomePage to false when not on the root path', () => {
     const location = { pathname: '/en-GB/android/404/' };
-    const root = renderIntoDocument(<AppBase i18n={getFakeI18nInst()}
-      FooterComponent={FakeFooterComponent}
-      InfoDialogComponent={FakeInfoDialogComponent}
-      MastHeadComponent={FakeMastHeadComponent}
-      SearchFormComponent={FakeSearchFormComponent}
-      clientApp="android" lang="en-GB" location={location} />);
+    const root = render({
+      clientApp: 'android', lang: 'en-GB', location });
 
     assert.isFalse(root.mastHead.props.isHomePage);
   });
@@ -135,24 +128,6 @@ describe('App', () => {
     const payload = { guid: '@my-addon', status: 'some-status' };
     handleGlobalEvent(payload);
     assert.ok(dispatch.calledWith({ type: INSTALL_STATE, payload }));
-  });
-
-  it('renders redux-connect errors', () => {
-    // This is just a sanity check to make sure the default component
-    // is wrapped in handleResourceErrors
-    const store = createStore();
-    const apiError = api.createApiError({
-      apiURL: 'https://some-url',
-      response: { status: 404 },
-    });
-    store.dispatch(reduxConnectLoadFail('someKey', apiError));
-
-    const root = renderIntoDocument(
-      <WrappedApp store={store} />
-    );
-
-    const rootNode = findDOMNode(root);
-    assert.include(rootNode.textContent, 'Not Found');
   });
 
   it('sets the clientApp as props', () => {

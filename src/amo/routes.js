@@ -12,6 +12,7 @@ import FeaturedAddons from './components/FeaturedAddons';
 import LandingPage from './components/LandingPage';
 import Home from './containers/Home';
 import DetailPage from './containers/DetailPage';
+import NotFound from './components/NotFound';
 import SearchPage from './containers/SearchPage';
 
 
@@ -27,5 +28,6 @@ export default (
     <Route path="fxa-authenticate" component={HandleLogin} />
     <Route path="search/" component={SearchPage} />
     <Route path=":visibleAddonType/" component={LandingPage} />
+    <Route path="*" component={NotFound} />
   </Route>
 );
