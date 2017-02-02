@@ -14,9 +14,10 @@ import NestedStatus from 'react-nested-status';
 import { Provider } from 'react-redux';
 import { match } from 'react-router';
 import { ReduxAsyncConnect, loadOnServer } from 'redux-connect';
+import { loadFail } from 'redux-connect/lib/store';
 import WebpackIsomorphicTools from 'webpack-isomorphic-tools';
 
-import { REDUX_CONNECT_LOAD_FAIL } from 'core/constants';
+import { createApiError } from 'core/api';
 import ServerHtml from 'core/containers/ServerHtml';
 import { prefixMiddleWare } from 'core/middleware';
 import { convertBoolean } from 'core/utils';
@@ -74,10 +75,11 @@ function showErrorPage(res, createStore, status, error = {}) {
     log.warn(`No clientApp for this ${status} error page`);
   }
 
-  store.dispatch({
-    type: REDUX_CONNECT_LOAD_FAIL,
-    payload: { error: { response: { status }, ...error } },
+  const apiError = createApiError({
+    apiURL: res.url,
+    response: { status },
   });
+  store.dispatch(loadFail('ServerBase', { ...apiError, ...error }));
 
   const pageProps = {
     appName,

@@ -5,10 +5,11 @@ import {
 } from 'react-addons-test-utils';
 import { findDOMNode } from 'react-dom';
 import { Provider } from 'react-redux';
+import { loadFail } from 'redux-connect/lib/store';
 
 import NotAuthorized from 'amo/components/NotAuthorized';
 import createStore from 'amo/store';
-import { REDUX_CONNECT_LOAD_FAIL } from 'core/constants';
+import { createApiError } from 'core/api';
 import I18nProvider from 'core/i18n/Provider';
 import { signedInApiState } from 'tests/client/amo/helpers';
 import { getFakeI18nInst } from 'tests/client/helpers';
@@ -17,15 +18,11 @@ import { getFakeI18nInst } from 'tests/client/helpers';
 describe('<NotAuthorized />', () => {
   function render({ ...props }) {
     const store = createStore(signedInApiState);
-    const payload = {
-      error: {
-        response: {
-          otherData: 'something',
-          status: 401,
-        },
-      },
-    };
-    store.dispatch({ type: REDUX_CONNECT_LOAD_FAIL, payload });
+    const error = createApiError({
+      apiURL: 'http://test.com',
+      response: { status: 401 },
+    });
+    store.dispatch(loadFail('ReduxKey', error));
 
     return findDOMNode(findRenderedComponentWithType(renderIntoDocument(
       <Provider store={store}>

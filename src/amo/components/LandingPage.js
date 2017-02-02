@@ -13,7 +13,7 @@ import {
   SEARCH_SORT_POPULAR,
   SEARCH_SORT_TOP_RATED,
 } from 'core/constants';
-import log from 'core/logger';
+import { NoAddonTypeError } from 'core/errors';
 import { apiAddonType, visibleAddonType } from 'core/utils';
 import translate from 'core/i18n/translate';
 
@@ -79,7 +79,8 @@ export class LandingPageBase extends React.Component {
       return contentForTypes[addonType];
     }
 
-    throw new Error(`No LandingPage content for addonType: ${addonType}`);
+    throw new NoAddonTypeError(
+      `No LandingPage content for addonType: ${addonType}`);
   }
 
   render() {
@@ -91,7 +92,11 @@ export class LandingPageBase extends React.Component {
     try {
       html = this.contentForType(addonType);
     } catch (err) {
-      return <NotFound />;
+      if (err instanceof NoAddonTypeError) {
+        return <NotFound />;
+      }
+
+      throw err;
     }
 
     return (
@@ -115,16 +120,12 @@ export class LandingPageBase extends React.Component {
   }
 }
 
-export function mapStateToProps(
-  state, ownProps, _apiAddonType = apiAddonType, _log = log
-) {
+export function mapStateToProps(state, ownProps, _apiAddonType = apiAddonType) {
   let addonType;
   try {
     addonType = _apiAddonType(ownProps.params.visibleAddonType);
   } catch (err) {
-    if (err.message.match('not found in API_ADDON_TYPES_MAPPING')) {
-      _log.debug('apiAddonType not found; this is likely a 404.', err);
-    } else {
+    if (!(err instanceof NoAddonTypeError)) {
       throw err;
     }
   }
