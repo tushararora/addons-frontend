@@ -5,6 +5,7 @@ import { asyncConnect } from 'redux-connect';
 import { connect } from 'react-redux';
 
 import LandingAddonsCard from 'amo/components/LandingAddonsCard';
+import NotFound from 'amo/components/NotFound';
 import { loadLandingAddons } from 'amo/utils';
 import {
   ADDON_TYPE_EXTENSION,
@@ -12,6 +13,7 @@ import {
   SEARCH_SORT_POPULAR,
   SEARCH_SORT_TOP_RATED,
 } from 'core/constants';
+import log from 'core/logger';
 import { apiAddonType, visibleAddonType } from 'core/utils';
 import translate from 'core/i18n/translate';
 
@@ -85,7 +87,12 @@ export class LandingPageBase extends React.Component {
       addonType, featuredAddons, highlyRatedAddons, popularAddons,
     } = this.props;
 
-    const html = this.contentForType(addonType);
+    let html;
+    try {
+      html = this.contentForType(addonType);
+    } catch (err) {
+      return <NotFound />;
+    }
 
     return (
       <div className={classNames('LandingPage', `LandingPage-${addonType}`)}>
@@ -123,7 +130,7 @@ export function mapStateToProps(
   }
 
   return {
-    addonType: apiAddonType(ownProps.params.visibleAddonType),
+    addonType,
     featuredAddons: state.landing.featured.results,
     highlyRatedAddons: state.landing.highlyRated.results,
     popularAddons: state.landing.popular.results,

@@ -132,7 +132,12 @@ describe('<LandingPage />', () => {
     const store = createStore(initialState);
 
     assert.throws(() => {
-      render({ addonType: 'XUL' });
-    }, 'No LandingPage content for addonType: XUL');
+      mapStateToProps(
+        store.getState(),
+        { params: { visibleAddonType: 'themes' } },
+        fakeApiAddonType,
+        fakeLog
+      );
+    }, 'Ice Cream Error');
   });
 });
