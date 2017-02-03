@@ -9,9 +9,10 @@ import { compose } from 'redux';
 import 'core/fonts/fira.scss';
 import 'amo/css/App.scss';
 import SearchForm from 'amo/components/SearchForm';
-import ErrorPage from 'amo/components/ErrorPage';
+import { getErrorComponent } from 'amo/utils';
 import { addChangeListeners } from 'core/addonManager';
 import { INSTALL_STATE } from 'core/constants';
+import ErrorPage from 'core/components/ErrorPage';
 import InfoDialog from 'core/containers/InfoDialog';
 import translate from 'core/i18n/translate';
 import Footer from 'amo/components/Footer';
@@ -81,7 +82,9 @@ export class AppBase extends React.Component {
           SearchFormComponent={SearchForm} isHomePage={isHomePage} location={location}
           query={query} ref={(ref) => { this.mastHead = ref; }} />
         <div className="App-content">
-          <ErrorPageComponent>{children}</ErrorPageComponent>
+          <ErrorPageComponent getErrorComponent={getErrorComponent}>
+            {children}
+          </ErrorPageComponent>
         </div>
         <FooterComponent handleViewDesktop={this.onViewDesktop}
           location={location} />

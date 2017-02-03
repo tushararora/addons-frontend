@@ -5,6 +5,8 @@ import { compose } from 'redux';
 import classNames from 'classnames';
 
 import 'disco/css/App.scss';
+import ErrorPage from 'core/components/ErrorPage';
+import { getErrorComponent } from 'core/utils';
 import translate from 'core/i18n/translate';
 
 
@@ -29,7 +31,9 @@ export class AppBase extends React.Component {
             { name: 'robots', content: 'noindex' },
           ]}
         />
-        {children}
+        <ErrorPage getErrorComponent={getErrorComponent}>
+          {children}
+        </ErrorPage>
       </div>
     );
   }
