@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React, { PropTypes } from 'react';
 import { compose } from 'redux';
 
@@ -10,15 +11,17 @@ import './LoadingIndicator.scss';
 export class LoadingIndicatorBase extends React.Component {
   static propTypes = {
     altText: PropTypes.node,
+    className: PropTypes.string,
     i18n: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
     altText: undefined,
+    className: '',
   }
 
   render() {
-    const { i18n } = this.props;
+    const { className, i18n } = this.props;
 
     // We have to do this because we can't use `i18n.gettext` in the static
     // defaultProps declaration.
@@ -28,7 +31,7 @@ export class LoadingIndicatorBase extends React.Component {
     }
 
     return (
-      <Icon className="LoadingIndicator" name="fox"
+      <Icon className={classNames('LoadingIndicator', className)} name="fox"
         ref={(ref) => { this.loadingIcon = ref; }}>
         {altText ? <span className="visually-hidden">{altText}</span> : null}
       </Icon>

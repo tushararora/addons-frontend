@@ -103,3 +103,14 @@ fieldset {
   margin: 0;
   border: 0;
 }
+
+.Loader__background {
+  background-color: transparentize($base-color, 0.1);
+}
+
+.LoadingIndicator--global {
+  left: 50%;
+  margin-left: -24px;
+  position: fixed;
+  top: 50%;
+}

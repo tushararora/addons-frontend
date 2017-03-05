@@ -1,4 +1,4 @@
-import { SET_ADDON_REVIEWS, SET_REVIEW } from 'amo/constants';
+import { SEND_REVIEW, SET_ADDON_REVIEWS, SET_REVIEW } from 'amo/constants';
 
 export function denormalizeReview(review) {
   return {
@@ -19,6 +19,13 @@ export function denormalizeReview(review) {
 }
 
 const setReviewAction = (review) => ({ type: SET_REVIEW, payload: review });
+
+export const sendReview = () => {
+  return {
+    type: SEND_REVIEW,
+    payload: { sendingReview: true },
+  };
+}
 
 export const setReview = (review, reviewOverrides = {}) => {
   if (!review) {
@@ -48,6 +55,7 @@ export const setAddonReviews = ({ addonSlug, reviews }) => {
     type: SET_ADDON_REVIEWS,
     payload: {
       addonSlug,
+      sendingReview: false,
       reviews: reviews.map((review) => denormalizeReview(review)),
     },
   };

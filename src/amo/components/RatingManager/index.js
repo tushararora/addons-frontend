@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 
 import { withErrorHandling } from 'core/errorHandler';
-import { setReview } from 'amo/actions/reviews';
+import { sendReview, setReview } from 'amo/actions/reviews';
 import { getLatestUserReview, submitReview } from 'amo/api';
 import DefaultAddonReview from 'amo/components/AddonReview';
 import DefaultAuthenticateButton from 'core/components/AuthenticateButton';
@@ -18,6 +18,7 @@ import {
 import translate from 'core/i18n/translate';
 import log from 'core/logger';
 import DefaultRating from 'ui/components/Rating';
+import LoadingIndicator from 'ui/components/LoadingIndicator';
 
 import './styles.scss';
 
@@ -127,7 +128,9 @@ export class RatingManagerBase extends React.Component {
   }
 
   render() {
-    const { AddonReview, Rating, i18n, addon, userId, userReview } = this.props;
+    const {
+      AddonReview, Rating, i18n, addon, sendingReview, userId, userReview,
+    } = this.props;
     const { showTextEntry } = this.state;
     const isLoggedIn = Boolean(userId);
 
@@ -138,6 +141,10 @@ export class RatingManagerBase extends React.Component {
     const onReviewSubmitted = () => {
       this.setState({ showTextEntry: false });
     };
+
+    if (sendingReview) {
+      return <LoadingIndicator />;
+    }
 
     return (
       <div className="RatingManager">
@@ -188,6 +195,7 @@ export const mapStateToProps = (state, ownProps) => {
 
   return {
     apiState: state.api,
+    sendingReview: state.reviews.sendingReview,
     userReview,
     userId,
   };
@@ -208,6 +216,7 @@ export const mapDispatchToProps = (dispatch) => ({
   },
 
   submitReview(params) {
+    dispatch(sendReview());
     return submitReview(params).then((review) => dispatch(setReview(review)));
   },
 });

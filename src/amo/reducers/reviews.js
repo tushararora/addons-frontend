@@ -1,7 +1,8 @@
-import { SET_ADDON_REVIEWS, SET_REVIEW } from 'amo/constants';
+import { SEND_REVIEW, SET_ADDON_REVIEWS, SET_REVIEW } from 'amo/constants';
 
 export const initialState = {
   byAddon: {},
+  sendingReview: false,
 };
 
 function mergeInNewReview(latestReview, oldReviews = {}) {
@@ -21,6 +22,8 @@ function mergeInNewReview(latestReview, oldReviews = {}) {
 
 export default function reviews(state = initialState, { payload, type }) {
   switch (type) {
+    case SEND_REVIEW:
+      return { ...state, sendingReview: payload.sendingReview };
     case SET_REVIEW: {
       const existingReviews =
         state[payload.userId] ? state[payload.userId][payload.addonId] : {};

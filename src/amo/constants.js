@@ -1,5 +1,6 @@
 // Action types.
 export const SET_ADDON_REVIEWS = 'SET_ADDON_REVIEWS';
+export const SEND_REVIEW = 'SEND_REVIEW';
 export const SET_REVIEW = 'SET_REVIEW';
 
 // Number of total featured add-ons to load.

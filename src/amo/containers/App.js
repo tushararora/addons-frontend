@@ -3,6 +3,7 @@ import config from 'config';
 import React, { PropTypes } from 'react';
 import cookie from 'react-cookie';
 import Helmet from 'react-helmet';
+import ReactLoader from 'react-loader-advanced';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -17,6 +18,7 @@ import DefaultErrorPage from 'core/components/ErrorPage';
 import InfoDialog from 'core/containers/InfoDialog';
 import translate from 'core/i18n/translate';
 import log from 'core/logger';
+import LoadingIndicator from 'ui/components/LoadingIndicator';
 
 import 'amo/css/App.scss';
 import 'core/fonts/fira.scss';
@@ -93,27 +95,33 @@ export class AppBase extends React.Component {
       clientApp,
       i18n,
       lang,
+      loading,
       location,
     } = this.props;
 
     const isHomePage = Boolean(location.pathname && location.pathname.match(
       new RegExp(`^\\/${lang}\\/${clientApp}\\/?$`)));
+    const loaderContent = (
+      <LoadingIndicator className="LoadingIndicator--global" />
+    );
     const query = location.query ? location.query.q : null;
     return (
-      <div className="amo">
-        <Helmet defaultTitle={i18n.gettext('Add-ons for Firefox')} />
-        <InfoDialogComponent />
-        <MastHeadComponent
-          SearchFormComponent={SearchForm} isHomePage={isHomePage} location={location}
-          query={query} ref={(ref) => { this.mastHead = ref; }} />
-        <div className="App-content">
-          <ErrorPage getErrorComponent={getErrorComponent}>
-            {children}
-          </ErrorPage>
+      <ReactLoader show={loading} message={loaderContent} contentBlur={2}>
+        <div className="amo">
+          <Helmet defaultTitle={i18n.gettext('Add-ons for Firefox')} />
+          <InfoDialogComponent />
+          <MastHeadComponent
+            SearchFormComponent={SearchForm} isHomePage={isHomePage} location={location}
+            query={query} ref={(ref) => { this.mastHead = ref; }} />
+          <div className="App-content">
+            <ErrorPage getErrorComponent={getErrorComponent}>
+              {children}
+            </ErrorPage>
+          </div>
+          <FooterComponent handleViewDesktop={this.onViewDesktop}
+            location={location} />
         </div>
-        <FooterComponent handleViewDesktop={this.onViewDesktop}
-          location={location} />
-      </div>
+      </ReactLoader>
     );
   }
 }
@@ -121,6 +129,7 @@ export class AppBase extends React.Component {
 export const mapStateToProps = (state) => ({
   clientApp: state.api.clientApp,
   lang: state.api.lang,
+  loading: !state.reduxAsyncConnect.loaded,
   userAgent: state.api.userAgent,
 });
 
