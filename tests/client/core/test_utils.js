@@ -399,7 +399,7 @@ describe('refreshAddon', () => {
         assert.ok(dispatch.called);
         assert.deepEqual(dispatch.firstCall.args[0],
                          actions.loadEntities(entities));
-        mockApi.verify();
+        return mockApi.verify();
       });
   });
 
@@ -410,10 +410,10 @@ describe('refreshAddon', () => {
       .withArgs({ slug: addonSlug, api: signedInApiState })
       .returns(Promise.reject(new Error('Error accessing API')));
     return refreshAddon({ addonSlug, apiState, dispatch })
-      .then(unexpectedSuccess,
-        () => {
-          assert.equal(dispatch.called, false);
-        });
+      .then(
+        unexpectedSuccess,
+        () => assert.equal(dispatch.called, false)
+      );
   });
 });
 
@@ -444,10 +444,8 @@ describe('loadAddonIfNeeded', () => {
 
   it('does not re-fetch the add-on if already loaded', () => {
     return loadAddonIfNeeded(makeProps(loadedSlug))
-      .then(() => {
-        assert.equal(dispatch.called, false,
-          'loadAddonIfNeeded() dispatched an add-on unexpectedly');
-      });
+      .then(() => assert.equal(dispatch.called, false,
+        'loadAddonIfNeeded() dispatched an add-on unexpectedly'));
   });
 
   it('loads the add-on if it is not loaded', () => {
@@ -463,9 +461,7 @@ describe('loadAddonIfNeeded', () => {
       .returns(Promise.resolve());
 
     return loadAddonIfNeeded(props, { _refreshAddon: mockAddonRefresher })
-      .then(() => {
-        mockAddonRefresher.verify();
-      });
+      .then(() => mockAddonRefresher.verify());
   });
 });
 
@@ -516,7 +512,7 @@ describe('loadCategoriesIfNeeded', () => {
     return loadCategoriesIfNeeded(props).then(() => {
       assert(dispatch.calledWith(action), 'dispatch not called');
       mockApi.verify();
-      mockActions.verify();
+      return mockActions.verify();
     });
   });
 
@@ -538,7 +534,7 @@ describe('loadCategoriesIfNeeded', () => {
     return loadCategoriesIfNeeded(props).then(() => {
       assert(dispatch.calledWith(action), 'dispatch not called');
       mockApi.verify();
-      mockActions.verify();
+      return mockActions.verify();
     });
   });
 });
@@ -739,18 +735,19 @@ describe('safeAsyncConnect', () => {
 describe('safePromise', () => {
   it('passes through a promised value', () => {
     const asPromised = safePromise(() => Promise.resolve('return value'));
-    return asPromised().then((returnedValue) => {
-      assert.equal(returnedValue, 'return value');
-    });
+    return asPromised()
+      .then((returnedValue) => assert.equal(returnedValue, 'return value'));
   });
 
   it('passes along all arguments', () => {
     const callback = sinon.spy(() => Promise.resolve());
     const asPromised = safePromise(callback);
-    return asPromised('one', 'two', 'three').then(() => {
-      assert.ok(callback.called, 'callback was never called');
-      assert.deepEqual(callback.firstCall.args, ['one', 'two', 'three']);
-    });
+    return asPromised('one', 'two', 'three')
+      .then(() => {
+        assert.ok(callback.called, 'callback was never called');
+        return assert.deepEqual(
+          callback.firstCall.args, ['one', 'two', 'three']);
+      });
   });
 
   it('catches errors and returns them as rejected promises', () => {
@@ -758,9 +755,8 @@ describe('safePromise', () => {
     const asPromised = safePromise(() => {
       throw new Error(message);
     });
-    return asPromised().then(unexpectedSuccess, (error) => {
-      assert.equal(error.message, message);
-    });
+    return asPromised()
+      .then(unexpectedSuccess, (error) => assert.equal(error.message, message));
   });
 });
 

@@ -2,7 +2,10 @@
   "env": {
     "mocha": true,
   },
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:promise/recommended",
+  ],
   "globals": {
     "dedent",
     "CLIENT_CONFIG": true,
@@ -11,6 +14,9 @@
     "webpackIsomorphicTools": true
   },
   "parser": "babel-eslint",
+  "plugins": [
+    "promise",
+  ],
   "rules": {
     "arrow-parens": ["error", "always"],
     // Beware about turning this rule back on. The rule encourages you to create
@@ -73,6 +79,8 @@
     "no-console": "error",
     "no-plusplus": "off",
     "no-underscore-dangle": "off",
+    "promise/avoid-new": "off",
+    "promise/no-nesting": "off",
     "space-before-function-paren": ["error", "never"],
     // The airbnb default of this rule mainly encourages `shape` over `object`
     // but there are too many bugs in the linter to use `shape` accurately.

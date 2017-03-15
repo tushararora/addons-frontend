@@ -96,6 +96,8 @@ describe('AddonReview', () => {
 
         assert.ok(onReviewSubmitted.called,
           'onReviewSubmitted() should have been called after updating');
+
+        return true;
       });
   });
 
@@ -190,7 +192,10 @@ describe('AddonReview', () => {
           .then(() => {
             mockApi.verify();
             assert.ok(dispatch.called, 'the new review should be dispatched');
-            assert.deepEqual(dispatch.firstCall.args[0], setReview(fakeReview));
+            assert.deepEqual(
+              dispatch.firstCall.args[0], setReview(fakeReview));
+
+            return true;
           });
       });
     });

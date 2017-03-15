@@ -43,9 +43,7 @@ describe('amo/utils', () => {
         .returns(Promise.resolve({ entities, result }));
 
       return loadFeaturedAddons({ store, params: ownProps.params })
-        .then(() => {
-          mockApi.verify();
-        });
+        .then(() => mockApi.verify());
     });
   });
 
@@ -86,9 +84,7 @@ describe('amo/utils', () => {
         store,
         params: { ...ownProps.params, visibleAddonType: 'themes' },
       })
-        .then(() => {
-          mockApi.verify();
-        });
+        .then(() => mockApi.verify());
     });
 
     it('returns a rejected Promise if the addonsType is wrong', () => {

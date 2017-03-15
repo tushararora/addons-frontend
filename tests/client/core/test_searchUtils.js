@@ -64,6 +64,7 @@ describe('searchUtils loadByCategoryIfNeeded()', () => {
         location: ownProps.location,
         params: ownProps.params,
       }), true);
+      return true;
     });
   });
 

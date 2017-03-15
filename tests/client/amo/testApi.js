@@ -71,7 +71,7 @@ describe('amo.api', () => {
 
       return submitReview(params).then((apiResponse) => {
         assert.deepEqual(apiResponse, genericApiResponse);
-        mockApi.verify();
+        return mockApi.verify();
       });
     });
 
@@ -97,7 +97,7 @@ describe('amo.api', () => {
 
       return submitReview(params).then((apiResponse) => {
         assert.deepEqual(apiResponse, genericApiResponse);
-        mockApi.verify();
+        return mockApi.verify();
       });
     });
 
@@ -123,9 +123,8 @@ describe('amo.api', () => {
         })
         .returns(Promise.resolve(genericApiResponse));
 
-      return submitReview(params).then(() => {
-        mockApi.verify();
-      });
+      return submitReview(params)
+        .then(() => mockApi.verify());
     });
   });
 
@@ -154,7 +153,7 @@ describe('amo.api', () => {
       return getReviews(params)
         .then((reviews) => {
           assert.deepEqual(reviews, [fakeReview]);
-          mockApi.verify();
+          return mockApi.verify();
         });
     });
 
@@ -177,9 +176,7 @@ describe('amo.api', () => {
         .returns(Promise.resolve({ results: [fakeReview] }));
 
       return getLatestUserReview({ user: 123, addon: 321 })
-        .then((review) => {
-          assert.deepEqual(review, fakeReview);
-        });
+        .then((review) => assert.deepEqual(review, fakeReview));
     });
 
     it('throws an error if multple reviews are received', () => {
@@ -205,9 +202,7 @@ describe('amo.api', () => {
         .returns(Promise.resolve({ results: [] }));
 
       return getLatestUserReview({ user: 123, addon: 321 })
-        .then((review) => {
-          assert.strictEqual(review, null);
-        });
+        .then((review) => assert.strictEqual(review, null));
     });
 
     it('requires a user and addon', () => {
@@ -216,9 +211,9 @@ describe('amo.api', () => {
         .returns(Promise.resolve({ results: [] }));
 
       return getLatestUserReview()
-        .then(unexpectedSuccess, (error) => {
-          assert.match(error.message, /user and addon must be specified/);
-        });
+        .then(unexpectedSuccess, (error) =>
+          assert.match(error.message, /user and addon must be specified/)
+        );
     });
   });
 });

@@ -88,9 +88,9 @@ describe('addonManager', () => {
     it('should call mozAddonManager.getAddonByID() with id', () => {
       fakeMozAddonManager.getAddonByID.returns(Promise.resolve(fakeAddon));
       return addonManager.getAddon('test-id', { _mozAddonManager: fakeMozAddonManager })
-        .then(() => {
-          assert.ok(fakeMozAddonManager.getAddonByID.calledWith('test-id'));
-        });
+        .then(() =>
+          assert.ok(fakeMozAddonManager.getAddonByID.calledWith('test-id'))
+        );
     });
 
     it('should reject if mozAddonManager.getAddonByID() resolves with falsey addon', () => {
@@ -112,25 +112,26 @@ describe('addonManager', () => {
       'should call mozAddonManager.createInstall() with url',
       () => addonManager.install(
         fakeInstallUrl, fakeCallback, { _mozAddonManager: fakeMozAddonManager, src: 'home' })
-        .then(() => {
+        .then(() =>
           assert.ok(fakeMozAddonManager.createInstall.calledWith(
-            { url: `${fakeInstallUrl}?src=home` }));
-        }));
+            { url: `${fakeInstallUrl}?src=home` }))
+        ));
 
     it(
       'should call installObj.addEventListener to setup events',
-      () => addonManager.install(
-        fakeInstallUrl, fakeCallback, { _mozAddonManager: fakeMozAddonManager, src: 'home' })
-        .then(() => {
+      () => addonManager.install(fakeInstallUrl, fakeCallback, {
+        _mozAddonManager: fakeMozAddonManager,
+        src: 'home',
+      })
+        .then(() =>
           // It registers an extra onInstallFailed and onInstallEnded listener.
-          assert.equal(fakeInstallObj.addEventListener.callCount, INSTALL_EVENT_LIST.length + 2);
-        }));
+          assert.equal(fakeInstallObj.addEventListener.callCount,
+            INSTALL_EVENT_LIST.length + 2)
+        ));
 
     it('should call installObj.install()', () => addonManager.install(
       fakeInstallUrl, fakeCallback, { _mozAddonManager: fakeMozAddonManager, src: 'home' })
-      .then(() => {
-        assert.ok(fakeInstallObj.install.called);
-      }));
+      .then(() => assert.ok(fakeInstallObj.install.called)));
 
     it('rejects if the install fails', () => {
       fakeInstallObj.install = sinon.spy(function install() {
@@ -150,6 +151,7 @@ describe('addonManager', () => {
         .then(() => {
           fakeInstallObj.onDownloadProgressListener(fakeEvent);
           assert.ok(fakeCallback.calledWith(fakeInstallObj, fakeEvent));
+          return true;
         });
     });
 
@@ -225,9 +227,7 @@ describe('addonManager', () => {
       };
       fakeMozAddonManager.getAddonByID.returns(Promise.resolve(fakeAddon));
       return addonManager.enable('whatever', { _mozAddonManager: fakeMozAddonManager })
-        .then(() => {
-          assert.ok(fakeAddon.setEnabled.calledWith(true));
-        });
+        .then(() => assert.ok(fakeAddon.setEnabled.calledWith(true)));
     });
 
     it('should throw if addon.setEnable does not exist', () => {

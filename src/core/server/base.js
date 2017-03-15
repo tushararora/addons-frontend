@@ -309,6 +309,7 @@ function baseServer(routes, createStore, { appInstanceName = appName } = {}) {
         })
         .catch((loadError) => {
           log.error(`Caught error from loadOnServer(): ${loadError}`);
+          // eslint-disable-next-line promise/no-callback-in-promise
           next(loadError);
         });
     });

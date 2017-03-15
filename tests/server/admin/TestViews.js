@@ -9,6 +9,7 @@ describe('Admin views', () => {
   before(() => runTestServer({ app: 'admin' })
     .then((server) => {
       app = server;
+      return true;
     }));
 
   after(() => {
@@ -24,6 +25,7 @@ describe('Admin views', () => {
       assert.include(policy.scriptSrc, 'https://addons-admin.cdn.mozilla.net');
       assert.notInclude(policy.connectSrc, "'self'");
       assert.include(policy.connectSrc, 'https://addons.mozilla.org');
+      return true;
     }));
 
   it('should be using SRI for script and style in /search', () => request(app)

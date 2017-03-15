@@ -146,7 +146,9 @@ export function loadDataIfNeeded({ store: { dispatch, getState } }) {
   return getDiscoveryAddons({ api: state.api })
     .then(({ entities, result }) => {
       dispatch(loadEntities(entities));
-      dispatch(discoResults(result.results.map((r) => entities.discoResults[r])));
+      return dispatch(discoResults(
+        result.results.map((r) => entities.discoResults[r])
+      ));
     });
 }
 

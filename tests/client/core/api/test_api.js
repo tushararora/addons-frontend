@@ -76,9 +76,7 @@ describe('api', () => {
       sinon.stub(errorHandler, 'clear');
 
       return api.callApi({ endpoint: 'resource', errorHandler })
-        .then(() => {
-          assert.ok(errorHandler.clear.called);
-        });
+        .then(() => assert.ok(errorHandler.clear.called));
     });
 
     it('passes errors to the error handler', () => {
@@ -127,9 +125,7 @@ describe('api', () => {
       }));
 
       return api.callApi({ endpoint: 'resource' })
-        .then(() => {
-          mockWindow.verify();
-        });
+        .then(() => mockWindow.verify());
     });
 
     it('handles any fetch error', () => {
@@ -248,6 +244,7 @@ describe('api', () => {
               football: { slug: 'football' },
             },
           });
+          return true;
         });
     });
 
@@ -339,6 +336,7 @@ describe('api', () => {
               football: { slug: 'football' },
             },
           });
+          return true;
         });
     });
   });
@@ -410,6 +408,7 @@ describe('api', () => {
           const foo = { slug: 'foo', name: 'Foo!' };
           assert.deepEqual(results.result, 'foo');
           assert.deepEqual(results.entities, { addons: { foo } });
+          return true;
         });
     });
 
@@ -440,7 +439,7 @@ describe('api', () => {
           const foo = { slug: 'foo', name: 'Foo!' };
           assert.deepEqual(results.result, 'foo');
           assert.deepEqual(results.entities, { addons: { foo } });
-          mockWindow.verify();
+          return mockWindow.verify();
         });
     });
   });
@@ -465,7 +464,7 @@ describe('api', () => {
       return api.login({ api: { lang: 'en-US' }, code: 'my-code', state: 'my-state' })
         .then((apiResponse) => {
           assert.strictEqual(apiResponse, response);
-          mockWindow.verify();
+          return mockWindow.verify();
         });
     });
 
@@ -499,7 +498,7 @@ describe('api', () => {
             entities: { users: { foo: user } },
             result: 'foo',
           });
-          mockWindow.verify();
+          return mockWindow.verify();
         });
     });
   });

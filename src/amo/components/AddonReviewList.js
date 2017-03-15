@@ -88,7 +88,7 @@ export function loadAddonReviews({ addonId, addonSlug, dispatch }) {
       // For example, the user selected a star rating but hasn't submitted
       // review text yet.
       const reviews = allReviews.filter((review) => Boolean(review.body));
-      dispatch(setAddonReviews({ addonSlug, reviews }));
+      return dispatch(setAddonReviews({ addonSlug, reviews }));
     });
 }
 

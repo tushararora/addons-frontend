@@ -11,6 +11,7 @@ describe('Discovery Pane GET requests', () => {
   before(() => runTestServer({ app: 'disco' })
     .then((server) => {
       app = server;
+      return true;
     }));
 
   after(() => {
@@ -29,7 +30,9 @@ describe('Discovery Pane GET requests', () => {
       assert.include(policy.connectSrc, 'https://addons.mozilla.org');
       assert.equal(policy.styleSrc.length, 2);
       assert.include(policy.styleSrc, cdnHost);
-      assert.include(policy.styleSrc, "'sha256-DiZjxuHvKi7pvUQCxCVyk1kAFJEUWe+jf6HWMI5agj4='");
+      assert.include(policy.styleSrc,
+        "'sha256-DiZjxuHvKi7pvUQCxCVyk1kAFJEUWe+jf6HWMI5agj4='");
+      return true;
     }));
 
   it('should be using SRI for script and style', () => request(app)
@@ -51,11 +54,14 @@ describe('Discovery Pane GET requests', () => {
     .then((res) => {
       assert.equal(res.header.location,
         '/en-US/firefox/discovery/pane/48.0/Darwin/normal');
+      return true;
     }));
 
   it('should set an HSTS header', () => request(app)
     .get('/en-US/firefox/discovery/pane/48.0/Darwin/normal')
     .then((res) => {
-      assert.equal(res.header['strict-transport-security'], 'max-age=31536000');
+      assert.equal(
+        res.header['strict-transport-security'], 'max-age=31536000');
+      return true;
     }));
 });

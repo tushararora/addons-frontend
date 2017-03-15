@@ -164,6 +164,7 @@ describe('amo/components/AddonReviewList', () => {
           assert.ok(dispatch.called);
           const expectedAction = setAddonReviews({ addonSlug, reviews });
           assert.deepEqual(dispatch.firstCall.args[0], expectedAction);
+          return true;
         });
     });
 
@@ -183,6 +184,8 @@ describe('amo/components/AddonReviewList', () => {
           });
           assert.ok(dispatch.called);
           assert.deepEqual(dispatch.firstCall.args[0], expectedAction);
+
+          return true;
         });
     });
   });
@@ -272,6 +275,8 @@ describe('amo/components/AddonReviewList', () => {
                                         { params: { addonSlug } });
           assert.deepEqual(props.addon, denormalizeAddon(fakeAddon));
           assert.deepEqual(props.reviews, getLoadedReviews({ reviews }));
+
+          return true;
         });
     });
 

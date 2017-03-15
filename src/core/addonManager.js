@@ -80,6 +80,8 @@ export function uninstall(guid, { _mozAddonManager = window.navigator.mozAddonMa
       if (result === false) {
         throw new Error('Uninstall failed');
       }
+
+      return result;
     });
 }
 

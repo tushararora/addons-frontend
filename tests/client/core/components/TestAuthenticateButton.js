@@ -98,6 +98,7 @@ describe('<AuthenticateButton />', () => {
       .then(() => {
         assert.notOk(store.getState().api.token);
         assert.ok(api.logOutFromServer.calledWith({ api: apiConfig }));
+        return true;
       });
   });
 

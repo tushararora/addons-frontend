@@ -244,6 +244,7 @@
     "eslint-config-airbnb": "13.0.0",
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "2.2.3",
+    "eslint-plugin-promise": "3.5.0",
     "eslint-plugin-react": "6.10.0",
     "fetch-mock": "5.9.4",
     "file-loader": "0.10.0",

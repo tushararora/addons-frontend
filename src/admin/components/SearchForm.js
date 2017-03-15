@@ -26,7 +26,7 @@ export class AdminSearchFormBase extends React.Component {
 
   handleGo = () => {
     const query = this.searchQuery.value;
-    this.props.loadAddon({ api: this.props.api, query })
+    return this.props.loadAddon({ api: this.props.api, query })
       .then(
         (slug) => this.context.router.push(`/search/addons/${slug}`),
         () => this.goToSearch(query));

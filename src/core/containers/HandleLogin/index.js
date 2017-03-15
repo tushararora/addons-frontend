@@ -63,6 +63,7 @@ function createLoadData(dispatch) {
             secure: config.get('cookieSecure'),
             maxAge: config.get('cookieMaxAge'),
           });
+
           let to;
           try {
             to = browserBase64Decode(state.split(':')[1]);
@@ -70,7 +71,10 @@ function createLoadData(dispatch) {
             log.error('Could not parse next path after log in', e, state);
             to = '/';
           }
+
           router.push({ pathname: to });
+
+          return Promise.resolve();
         });
     }
     return Promise.resolve();

@@ -11,6 +11,7 @@ describe('AMO GET Requests', () => {
   before(() => runTestServer({ app: 'amo' })
     .then((server) => {
       app = server;
+      return true;
     }));
 
   after(() => {
@@ -29,7 +30,9 @@ describe('AMO GET Requests', () => {
       assert.include(policy.connectSrc, 'https://addons.mozilla.org');
       assert.equal(policy.styleSrc.length, 2);
       assert.include(policy.styleSrc, cdnHost);
-      assert.include(policy.styleSrc, "'sha256-DiZjxuHvKi7pvUQCxCVyk1kAFJEUWe+jf6HWMI5agj4='");
+      assert.include(policy.styleSrc,
+        "'sha256-DiZjxuHvKi7pvUQCxCVyk1kAFJEUWe+jf6HWMI5agj4='");
+      return true;
     }));
 
   it('should be using SRI for script and style on the amo app homepage', () => request(app)
@@ -45,8 +48,8 @@ describe('AMO GET Requests', () => {
     .get('/whatever/firefox/')
     .expect(302)
     .then((res) => {
-      assert.equal(res.header.location,
-        '/en-US/firefox/');
+      assert.equal(res.header.location, '/en-US/firefox/');
+      return true;
     }));
 
   it('should NOT redirect a URL without a trailing slash if exception exists',
@@ -59,8 +62,8 @@ describe('AMO GET Requests', () => {
     .get('/en-US/firefox/search')
     .expect(301)
     .then((res) => {
-      assert.equal(res.header.location,
-        '/en-US/firefox/search/');
+      assert.equal(res.header.location, '/en-US/firefox/search/');
+      return true;
     }));
 
   it('should respond with a 404 to user pages', () => request(app)

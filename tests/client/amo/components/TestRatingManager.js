@@ -93,6 +93,8 @@ describe('RatingManager', () => {
         assert.equal(call.errorHandler, errorHandler);
         assert.equal(call.userId, 92345);
         assert.strictEqual(call.reviewId, undefined);
+
+        return true;
       });
   });
 
@@ -113,6 +115,8 @@ describe('RatingManager', () => {
         assert.ok(call.reviewId);
         assert.equal(call.reviewId, fakeReview.id);
         assert.equal(call.versionId, fakeReview.version.id);
+
+        return true;
       });
   });
 
@@ -150,6 +154,8 @@ describe('RatingManager', () => {
         assert.equal(call.versionId, addon.current_version.id);
         assert.equal(call.rating, newReview.rating);
         assert.equal(call.addonId, newReview.addon.id);
+
+        return true;
       });
   });
 
@@ -176,6 +182,8 @@ describe('RatingManager', () => {
         props.onReviewSubmitted();
         assert.equal(root.state.showTextEntry, false,
           'expected state to indicate that AddonReview is hidden');
+
+        return true;
       });
   });
 
@@ -306,7 +314,7 @@ describe('RatingManager', () => {
             assert.equal(dispatch.called, true);
             const action = dispatch.firstCall.args[0];
             assert.deepEqual(action, setReview(fakeReview));
-            mockApi.verify();
+            return mockApi.verify();
           });
       });
     });
@@ -324,7 +332,10 @@ describe('RatingManager', () => {
           .then(() => {
             mockApi.verify();
             assert.equal(dispatch.called, true);
-            assert.deepEqual(dispatch.firstCall.args[0], setReview(fakeReview));
+            assert.deepEqual(
+              dispatch.firstCall.args[0], setReview(fakeReview));
+
+            return true;
           });
       });
 
@@ -335,6 +346,7 @@ describe('RatingManager', () => {
         return actions.loadSavedReview({ userId: 123, addonId })
           .then(() => {
             assert.equal(dispatch.called, false);
+            return true;
           });
       });
     });

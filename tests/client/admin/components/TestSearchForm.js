@@ -120,11 +120,12 @@ describe('SearchForm loadAddon', () => {
       .withArgs(entities)
       .returns(action);
     const { loadAddon } = mapDispatchToProps(dispatch);
+
     return loadAddon({ api, query: slug })
       .then(() => {
         assert(dispatch.calledWith(action));
         mockApi.verify();
-        mockActions.verify();
+        return mockActions.verify();
       });
   });
 });

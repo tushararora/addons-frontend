@@ -121,6 +121,7 @@ describe('<HandleLogin />', () => {
       return loadData({ api: apiConfig, location, router }).then(() => {
         assert(dispatch.calledOnce, 'dispatch not called');
         assert(dispatch.calledWith({ type: 'SET_JWT', payload }));
+        return true;
       });
     });
 
@@ -130,9 +131,8 @@ describe('<HandleLogin />', () => {
       const mockCookie = sinon.mock(cookie);
       mockCookie.expects('save').once().withArgs(
         'jwt_api_auth_token', token, { path: '/', secure: true, maxAge: 2592000 });
-      return loadData({ api: apiConfig, location, router }).then(() => {
-        mockCookie.verify();
-      });
+      return loadData({ api: apiConfig, location, router })
+        .then(() => mockCookie.verify());
     });
 
     it('redirects to the root endpoint without a next path', () => {
@@ -144,9 +144,8 @@ describe('<HandleLogin />', () => {
         .once()
         .withArgs({ pathname: '/' })
         .returns(null);
-      return loadData({ api: apiConfig, location, router }).then(() => {
-        mockRouter.verify();
-      });
+      return loadData({ api: apiConfig, location, router })
+        .then(() => mockRouter.verify());
     });
 
     it('redirects to the next path', () => {
@@ -158,9 +157,8 @@ describe('<HandleLogin />', () => {
         .once()
         .withArgs({ pathname: '/foo' })
         .returns(null);
-      return loadData({ api: apiConfig, location, router }).then(() => {
-        mockRouter.verify();
-      });
+      return loadData({ api: apiConfig, location, router })
+        .then(() => mockRouter.verify());
     });
   });
 });

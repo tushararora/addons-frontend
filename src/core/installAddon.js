@@ -168,13 +168,15 @@ export function makeMapDispatchToProps({ WrappedComponent, src }) {
         const payload = { guid, url: installURL };
         return _addonManager.getAddon(guid)
           .then((addon) => {
-            const status = addon.isActive && addon.isEnabled ? ENABLED : DISABLED;
-            dispatch({
+            const status = addon.isActive && addon.isEnabled ?
+              ENABLED : DISABLED;
+            return dispatch({
               type: INSTALL_STATE,
               payload: { ...payload, status },
             });
           }, () => {
-            log.info(`Add-on "${guid}" not found so setting status to UNINSTALLED`);
+            log.info(
+              `Add-on "${guid}" not found so setting status to UNINSTALLED`);
             dispatch({
               type: INSTALL_STATE,
               payload: { ...payload, status: UNINSTALLED },
@@ -182,7 +184,8 @@ export function makeMapDispatchToProps({ WrappedComponent, src }) {
           })
           .catch((err) => {
             log.error(err);
-            // Dispatch a generic error should the success/error functions throw.
+            // Dispatch a generic error should the success/error functions
+            // throw.
             dispatch({
               type: INSTALL_STATE,
               payload: { guid, status: ERROR, error: FATAL_ERROR },
@@ -197,10 +200,12 @@ export function makeMapDispatchToProps({ WrappedComponent, src }) {
             if (!_addonManager.hasPermissionPromptsEnabled()) {
               _showInfo({ name, iconUrl });
             }
+            return true;
           })
           .catch((err) => {
             if (err && err.message === SET_ENABLE_NOT_AVAILABLE) {
-              log.info(`addon.setEnabled not available. Unable to enable ${guid}`);
+              log.info(
+                `addon.setEnabled not available. Unable to enable ${guid}`);
             } else {
               log.error(err);
               dispatch({
@@ -214,7 +219,9 @@ export function makeMapDispatchToProps({ WrappedComponent, src }) {
       install() {
         const { guid, iconUrl, installURL, name } = ownProps;
         dispatch({ type: START_DOWNLOAD, payload: { guid } });
-        return _addonManager.install(installURL, makeProgressHandler(dispatch, guid), { src })
+        return _addonManager.install(
+          installURL, makeProgressHandler(dispatch, guid), { src }
+        )
           .then(() => {
             _tracking.sendEvent({
               action: TRACKING_TYPE_EXTENSION,
@@ -224,6 +231,7 @@ export function makeMapDispatchToProps({ WrappedComponent, src }) {
             if (!_addonManager.hasPermissionPromptsEnabled()) {
               showInfo({ name, iconUrl });
             }
+            return true;
           })
           .catch((err) => {
             log.error(err);
@@ -244,6 +252,7 @@ export function makeMapDispatchToProps({ WrappedComponent, src }) {
               category: UNINSTALL_CATEGORY,
               label: name,
             });
+            return true;
           })
           .catch((err) => {
             log.error(err);

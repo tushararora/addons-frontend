@@ -123,6 +123,7 @@ describe('AddonPage', () => {
           assert.ok(getAddons.calledWith({ api }));
           assert.ok(dispatch.calledWith(loadEntities(entities)));
           assert.ok(dispatch.calledWith(discoResults([{ addon: 'foo' }])));
+          return true;
         });
     });
   });

@@ -236,19 +236,21 @@ describe('<Paginate />', () => {
       });
     }
 
-    return renderPaginateRoute().then((root) => {
-      const links = Array.from(root.querySelectorAll('a'));
-      assert.deepEqual(
-        links.map((link) => [link.textContent, link.getAttribute('href')]),
-        [
-          ['Previous', '/some-path/?page=4'],
-          ['3', '/some-path/?page=3'],
-          ['4', '/some-path/?page=4'],
-          ['6', '/some-path/?page=6'],
-          ['7', '/some-path/?page=7'],
-          ['Next', '/some-path/?page=6'],
-        ],
-      );
-    });
+    return renderPaginateRoute()
+      .then((root) => {
+        const links = Array.from(root.querySelectorAll('a'));
+        assert.deepEqual(
+          links.map((link) => [link.textContent, link.getAttribute('href')]),
+          [
+            ['Previous', '/some-path/?page=4'],
+            ['3', '/some-path/?page=3'],
+            ['4', '/some-path/?page=4'],
+            ['6', '/some-path/?page=6'],
+            ['7', '/some-path/?page=7'],
+            ['Next', '/some-path/?page=6'],
+          ],
+        );
+        return true;
+      });
   });
 });

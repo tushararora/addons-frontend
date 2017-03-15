@@ -43,7 +43,7 @@ export function loadProfileIfNeeded({ store: { getState, dispatch } }) {
     return fetchProfile({ api: state.api })
       .then(({ entities, result }) => {
         dispatch(loadEntities(entities));
-        dispatch(setCurrentUser(result));
+        return dispatch(setCurrentUser(result));
       });
   }
   return Promise.resolve();

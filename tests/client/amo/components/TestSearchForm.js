@@ -131,7 +131,7 @@ describe('SearchForm loadAddon', () => {
       .then(() => {
         assert(dispatch.calledWith(action));
         mockApi.verify();
-        mockActions.verify();
+        return mockActions.verify();
       });
   });
 });

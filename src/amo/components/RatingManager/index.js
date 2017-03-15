@@ -83,9 +83,7 @@ export class RatingManagerBase extends React.Component {
       log.info(`Submitting a new review for versionId ${params.versionId}`);
     }
     return this.props.submitReview(params)
-      .then(() => {
-        this.setState({ showTextEntry: true });
-      });
+      .then(() => this.setState({ showTextEntry: true }));
   }
 
   getLogInPrompt(
@@ -199,11 +197,12 @@ export const mapDispatchToProps = (dispatch) => ({
     return getLatestUserReview({ user: userId, addon: addonId })
       .then((review) => {
         if (review) {
-          dispatch(setReview(review));
-        } else {
-          log.info(
-            `No saved review found for userId ${userId}, addonId ${addonId}`);
+          return dispatch(setReview(review));
         }
+
+        log.info(
+          `No saved review found for userId ${userId}, addonId ${addonId}`);
+        return null;
       });
   },
 

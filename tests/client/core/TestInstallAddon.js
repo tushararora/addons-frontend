@@ -108,6 +108,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: ENABLED, url: installURL },
           }));
+          return true;
         });
     });
 
@@ -132,6 +133,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: DISABLED, url: installURL },
           }));
+          return true;
         });
     });
 
@@ -156,6 +158,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: DISABLED, url: installURL },
           }));
+          return true;
         });
     });
 
@@ -174,6 +177,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: ENABLED, url: installURL },
           }));
+          return true;
         });
     });
 
@@ -196,6 +200,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: DISABLED, url: installURL },
           }));
+          return true;
         });
     });
 
@@ -218,6 +223,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: DISABLED, url: installURL },
           }));
+          return true;
         });
     });
 
@@ -234,6 +240,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: UNINSTALLED, url: installURL },
           }));
+          return true;
         });
     });
 
@@ -251,6 +258,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: ERROR, error: FATAL_ERROR },
           }), 'dispatch was not called with FATAL_ERROR');
+          return true;
         });
     });
   });
@@ -316,6 +324,7 @@ describe('withInstallHelpers inner functions', () => {
         .then(() => {
           assert.ok(fakeAddonManager.enable.calledWith(guid));
           assert.ok(fakeShowInfo.calledWith({ name, iconUrl }));
+          return true;
         });
     });
 
@@ -332,6 +341,7 @@ describe('withInstallHelpers inner functions', () => {
         .then(() => {
           assert.ok(fakeAddonManager.enable.calledWith(guid));
           assert.ok(fakeShowInfo.neverCalledWith({ name, iconUrl }));
+          return true;
         });
     });
 
@@ -349,6 +359,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: ERROR, error: FATAL_ERROR },
           }));
+          return true;
         });
     });
 
@@ -366,6 +377,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: ERROR, error: FATAL_ERROR },
           }));
+          return true;
         });
     });
   });
@@ -382,7 +394,9 @@ describe('withInstallHelpers inner functions', () => {
         { _addonManager: fakeAddonManager, installURL });
       return install({ guid, installURL })
         .then(() => {
-          assert(fakeAddonManager.install.calledWith(installURL, sinon.match.func, { src }));
+          assert(fakeAddonManager.install.calledWith(
+            installURL, sinon.match.func, { src }));
+          return true;
         });
     });
 
@@ -404,6 +418,7 @@ describe('withInstallHelpers inner functions', () => {
             category: INSTALL_CATEGORY,
             label: 'hai-addon',
           }));
+          return true;
         });
     });
 
@@ -454,11 +469,15 @@ describe('withInstallHelpers inner functions', () => {
           assert(dispatch.calledWith({
             type: CLOSE_INFO,
           }));
+          return true;
         });
     });
 
-    it('should not dispatch SHOW_INFO if permissionPromptsEnabled is true', () => {
-      const fakeAddonManager = getFakeAddonManagerWrapper({ permissionPromptsEnabled: true });
+    it('should not dispatch SHOW_INFO if permissionPromptsEnabled is true'
+    , () => {
+      const fakeAddonManager = getFakeAddonManagerWrapper({
+        permissionPromptsEnabled: true,
+      });
       const dispatch = sinon.spy();
       const iconUrl = 'whatevs';
       const name = 'test-addon';
@@ -480,6 +499,7 @@ describe('withInstallHelpers inner functions', () => {
               closeAction: sinon.match.func,
             },
           }));
+          return true;
         });
     });
 
@@ -497,6 +517,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: ERROR, error: FATAL_INSTALL_ERROR },
           }), 'dispatch was not called with FATAL_INSTALL_ERROR');
+          return true;
         });
     });
   });
@@ -519,6 +540,7 @@ describe('withInstallHelpers inner functions', () => {
             },
           }));
           assert(fakeAddonManager.uninstall.calledWith(guid));
+          return true;
         });
     });
 
@@ -540,6 +562,7 @@ describe('withInstallHelpers inner functions', () => {
             type: INSTALL_STATE,
             payload: { guid, status: ERROR, error: FATAL_UNINSTALL_ERROR },
           }), 'dispatch was not called with FATAL_UNINSTALL_ERROR');
+          return true;
         });
     });
 
@@ -560,6 +583,7 @@ describe('withInstallHelpers inner functions', () => {
             category: UNINSTALL_CATEGORY,
             label: 'whatevs',
           }), 'correctly called');
+          return true;
         });
     });
 
@@ -579,6 +603,7 @@ describe('withInstallHelpers inner functions', () => {
             category: UNINSTALL_CATEGORY,
             label: 'whatevs',
           }));
+          return true;
         });
     });
 
@@ -599,6 +624,7 @@ describe('withInstallHelpers inner functions', () => {
             category: UNINSTALL_CATEGORY,
             label: 'whatevs',
           }));
+          return true;
         });
     });
   });

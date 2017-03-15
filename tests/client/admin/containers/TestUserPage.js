@@ -52,7 +52,7 @@ describe('<UserPage />', () => {
       return loadProfileIfNeeded({ store }).then(() => {
         assert(dispatch.calledWith(loadEntities(entities)));
         assert(dispatch.calledWith(setCurrentUser('the-username')));
-        mockApi.verify();
+        return mockApi.verify();
       });
     });
 
@@ -74,7 +74,7 @@ describe('<UserPage />', () => {
         .never();
       return loadProfileIfNeeded({ store }).then(() => {
         assert(!dispatch.called, 'dispatch should not be called');
-        mockApi.verify();
+        return mockApi.verify();
       });
     });
   });

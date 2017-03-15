@@ -18,6 +18,7 @@ describe('Details Page', () => {
   before(() => runTestServer({ app: 'amo' })
     .then((server) => {
       app = server;
+      return true;
     }));
 
   after(() => {

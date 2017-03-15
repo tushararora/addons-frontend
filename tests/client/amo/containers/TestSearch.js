@@ -177,6 +177,8 @@ describe('CurrentSearchPage.loadSearchResultsIfNeeded()', () => {
         dispatch.secondCall.calledWith(
           searchActions.searchLoad({ filters, entities, result })),
           'searchLoad not called');
+
+      return true;
     });
   });
 
@@ -206,6 +208,8 @@ describe('CurrentSearchPage.loadSearchResultsIfNeeded()', () => {
         dispatch.secondCall.calledWith(
           searchActions.searchFail({ page, filters })),
           'searchFail not called');
+
+      return true;
     });
   });
 });
