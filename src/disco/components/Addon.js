@@ -7,12 +7,9 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
-import { sanitizeHTML } from 'core/utils';
-import translate from 'core/i18n/translate';
-import themeAction from 'core/themePreview';
-import tracking, { getAction } from 'core/tracking';
-import InstallButton from 'core/components/InstallButton';
+import AddonCompatibilityError from 'disco/components/AddonCompatibilityError';
 import HoverIntent from 'core/components/HoverIntent';
+import InstallButton from 'core/components/InstallButton';
 import {
   CLICK_CATEGORY,
   DOWNLOAD_FAILED,
@@ -27,9 +24,17 @@ import {
   validAddonTypes,
   validInstallStates,
 } from 'core/constants';
+import translate from 'core/i18n/translate';
 import { withInstallHelpers } from 'core/installAddon';
+import themeAction from 'core/themePreview';
+import tracking, { getAction } from 'core/tracking';
+import {
+  getClientCompatibility as _getClientCompatibility,
+  sanitizeHTML,
+} from 'core/utils';
 
 import 'disco/css/Addon.scss';
+
 
 export class AddonBase extends React.Component {
   static propTypes = {
@@ -38,6 +43,7 @@ export class AddonBase extends React.Component {
     error: PropTypes.string,
     heading: PropTypes.string.isRequired,
     getBrowserThemeData: PropTypes.func.isRequired,
+    getClientCompatibility: PropTypes.func,
     i18n: PropTypes.object.isRequired,
     iconUrl: PropTypes.string,
     installTheme: PropTypes.func.isRequired,
@@ -53,9 +59,10 @@ export class AddonBase extends React.Component {
   }
 
   static defaultProps = {
+    getClientCompatibility: _getClientCompatibility,
+    needsRestart: false,
     // Defaults themeAction to the imported func.
     themeAction,
-    needsRestart: false,
     _tracking: tracking,
   }
 
@@ -180,7 +187,14 @@ export class AddonBase extends React.Component {
   }
 
   render() {
-    const { heading, type } = this.props;
+    const {
+      addon,
+      clientApp,
+      getClientCompatibility,
+      heading,
+      type,
+      userAgentInfo,
+    } = this.props;
 
     if (!validAddonTypes.includes(type)) {
       throw new Error(`Invalid addon type "${type}"`);
@@ -190,6 +204,9 @@ export class AddonBase extends React.Component {
       theme: type === ADDON_TYPE_THEME,
       extension: type === ADDON_TYPE_EXTENSION,
     });
+
+    const { compatible, minVersion, reason } = getClientCompatibility({
+      addon, clientApp, userAgentInfo });
 
     return (
       <div className={addonClasses}>
@@ -209,10 +226,21 @@ export class AddonBase extends React.Component {
               onClick={this.clickHeadingLink}
               ref={(ref) => { this.heading = ref; }}
               className="heading"
-              dangerouslySetInnerHTML={sanitizeHTML(heading, ['a', 'span'])} />
+              dangerouslySetInnerHTML={sanitizeHTML(heading, ['a', 'span'])}
+            />
             {this.getDescription()}
+            {!compatible ? (
+              <AddonCompatibilityError
+                minVersion={minVersion}
+                reason={reason}
+              />
+            ) : null}
           </div>
-          <InstallButton className="Addon-install-button" size="small" {...this.props} />
+          <InstallButton
+            className="Addon-install-button"
+            size="small"
+            {...this.props}
+          />
         </div>
       </div>
     );
@@ -226,6 +254,8 @@ export function mapStateToProps(state, ownProps) {
     addon,
     ...addon,
     ...installation,
+    clientApp: state.api.clientApp,
+    userAgentInfo: state.api.userAgentInfo,
   };
 }
 

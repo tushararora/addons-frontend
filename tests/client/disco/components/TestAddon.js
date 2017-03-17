@@ -4,15 +4,12 @@ import {
   renderIntoDocument,
   Simulate,
 } from 'react-addons-test-utils';
-import {
-  findDOMNode,
-} from 'react-dom';
+import { findDOMNode } from 'react-dom';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import translate from 'core/i18n/translate';
-import {
-  AddonBase,
-  mapStateToProps,
-} from 'disco/components/Addon';
+import { AddonBase, mapStateToProps } from 'disco/components/Addon';
 import HoverIntent from 'core/components/HoverIntent';
 import {
   ADDON_TYPE_EXTENSION,
@@ -40,13 +37,17 @@ const result = {
 };
 
 function renderAddon({ setCurrentStatus = sinon.stub(), ...props }) {
-  const MyAddon = translate({ withRef: true })(AddonBase);
+  const MyAddon = compose(
+    connect(mapStateToProps, undefined, undefined, { withRef: true }),
+    translate({ withRef: true }),
+  )(AddonBase);
   const getBrowserThemeData = () => '{"theme":"data"}';
 
   return findRenderedComponentWithType(renderIntoDocument(
-    <MyAddon getBrowserThemeData={getBrowserThemeData} i18n={getFakeI18nInst()}
-      setCurrentStatus={setCurrentStatus} hasAddonManager
-      store={createStore({ api: signedInApiState })} {...props} />
+    <MyAddon getBrowserThemeData={getBrowserThemeData}
+      i18n={getFakeI18nInst()} setCurrentStatus={setCurrentStatus}
+      hasAddonManager store={createStore({ api: signedInApiState })}
+      {...props} />
   ), MyAddon).getWrappedInstance();
 }
 
@@ -262,6 +263,17 @@ describe('<Addon />', () => {
         label: 'foo',
       }), sinon.format(fakeTracking.sendEvent.firstCall.args));
     });
+
+    // it('disables incompatible add-ons', () => {
+    //   const root = renderAddon({
+    //     addon: {
+    //       ...result,
+    //       current_version: {},
+    //     },
+    //     ...result,
+    //   });
+    //   assert.equal(root.editorialDescription.textContent, 'test-editorial-description');
+    // });
   });
 
 
@@ -349,6 +361,7 @@ describe('<Addon />', () => {
         downloadProgress: 75,
       };
       const props = mapStateToProps({
+        api: signedInApiState,
         installations: { foo: { some: 'data' }, 'foo@addon': addon },
         addons: { 'foo@addon': { addonProp: 'addonValue' } },
       }, { guid: 'foo@addon' });
@@ -359,15 +372,22 @@ describe('<Addon />', () => {
         guid: 'foo@addon',
         downloadProgress: 75,
         addonProp: 'addonValue',
+        clientApp: signedInApiState.clientApp,
+        userAgentInfo: signedInApiState.userAgentInfo,
       });
     });
 
     it('handles missing data', () => {
       const props = mapStateToProps({
+        api: signedInApiState,
         installations: {},
         addons: {},
       }, { guid: 'nope@addon' });
-      assert.deepEqual(props, { addon: {} });
+      assert.deepEqual(props, {
+        clientApp: signedInApiState.clientApp,
+        userAgentInfo: signedInApiState.userAgentInfo,
+        addon: {},
+      });
     });
   });
 });

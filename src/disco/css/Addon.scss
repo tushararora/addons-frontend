@@ -61,6 +61,15 @@ $addon-padding: 20px;
     }
   }
 
+  .AddonCompatibilityError {
+    // background: none;
+    // color: $header-copy-font-color;
+    font-size: 10px;
+    margin: 0 0 5px;
+    // padding: 0;
+    // text-align: left;
+  }
+
   &:not(.theme) .Addon-install-button {
     align-self: stretch;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
