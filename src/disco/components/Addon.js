@@ -122,9 +122,9 @@ export class AddonBase extends React.Component {
     }
     return (
       <div
-        ref={(ref) => { this.editorialDescription = ref; }}
         className="editorial-description"
-        dangerouslySetInnerHTML={sanitizeHTML(description, ['blockquote', 'cite'])} />
+        dangerouslySetInnerHTML={sanitizeHTML(description, [
+          'blockquote', 'cite'])} />
     );
   }
 
@@ -224,7 +224,6 @@ export class AddonBase extends React.Component {
           <div className="copy">
             <h2
               onClick={this.clickHeadingLink}
-              ref={(ref) => { this.heading = ref; }}
               className="heading"
               dangerouslySetInnerHTML={sanitizeHTML(heading, ['a', 'span'])}
             />

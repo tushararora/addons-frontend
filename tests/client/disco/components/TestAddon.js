@@ -47,6 +47,7 @@ function renderAddon({ setCurrentStatus = sinon.stub(), ...props }) {
     <MyAddon getBrowserThemeData={getBrowserThemeData}
       i18n={getFakeI18nInst()} setCurrentStatus={setCurrentStatus}
       hasAddonManager store={createStore({ api: signedInApiState })}
+      getClientCompatibility={() => ({ compatible: true, reason: null })}
       {...props} />
   ), MyAddon).getWrappedInstance();
 }
@@ -172,12 +173,15 @@ describe('<Addon />', () => {
 
     it('renders the heading', () => {
       const root = renderAddon({ addon: result, ...result });
-      assert.include(root.heading.textContent, 'test-heading');
+      assert.include(findDOMNode(root).querySelector('.heading').textContent,
+        'test-heading');
     });
 
     it('renders the editorial description', () => {
       const root = renderAddon({ addon: result, ...result });
-      assert.equal(root.editorialDescription.textContent, 'test-editorial-description');
+      assert.equal(
+        findDOMNode(root).querySelector('.editorial-description').textContent,
+        'test-editorial-description');
     });
 
     it('purifies the heading', () => {
@@ -186,7 +190,8 @@ describe('<Addon />', () => {
         heading: '<script>alert("hi")</script><em>Hey!</em> <i>This is <span>an add-on</span></i>',
       };
       const root = renderAddon({ addon: data, ...data });
-      assert.include(root.heading.innerHTML, 'Hey! This is <span>an add-on</span>');
+      assert.include(findDOMNode(root).querySelector('.heading').innerHTML,
+        'Hey! This is <span>an add-on</span>');
     });
 
     it('purifies the heading with a link and adds link attrs', () => {
@@ -195,7 +200,7 @@ describe('<Addon />', () => {
         heading: 'This is <span>an <a href="https://addons.mozilla.org">add-on</a>/span>',
       };
       const root = renderAddon({ addon: data, ...data });
-      const link = root.heading.querySelector('a');
+      const link = findDOMNode(root).querySelector('.heading a');
       assert.equal(link.getAttribute('rel'), 'noopener noreferrer');
       assert.equal(link.getAttribute('target'), '_blank');
     });
@@ -206,7 +211,7 @@ describe('<Addon />', () => {
         heading: 'This is <span>an <a href="javascript:alert(1)">add-on</a>/span>',
       };
       const root = renderAddon({ addon: data, ...data });
-      const link = root.heading.querySelector('a');
+      const link = findDOMNode(root).querySelector('.heading a');
       assert.equal(link.getAttribute('href'), null);
     });
 
@@ -218,7 +223,7 @@ describe('<Addon />', () => {
       };
       const root = renderAddon({ addon: data, ...data });
       assert.equal(
-        root.editorialDescription.innerHTML,
+        findDOMNode(root).querySelector('.editorial-description').innerHTML,
         '<blockquote>This is an add-on!</blockquote> Reviewed by <cite>a person</cite>');
     });
 
@@ -234,7 +239,8 @@ describe('<Addon />', () => {
 
     it('throws on invalid add-on type', () => {
       const root = renderAddon({ addon: result, ...result });
-      assert.include(root.heading.textContent, 'test-heading');
+      assert.include(findDOMNode(root).querySelector('.heading').textContent,
+        'test-heading');
       const data = { ...result, type: 'Whatever' };
       assert.throws(() => {
         renderAddon({ addon: data, ...data });
@@ -264,16 +270,24 @@ describe('<Addon />', () => {
       }), sinon.format(fakeTracking.sendEvent.firstCall.args));
     });
 
-    // it('disables incompatible add-ons', () => {
-    //   const root = renderAddon({
-    //     addon: {
-    //       ...result,
-    //       current_version: {},
-    //     },
-    //     ...result,
-    //   });
-    //   assert.equal(root.editorialDescription.textContent, 'test-editorial-description');
-    // });
+    it('disables incompatible add-ons', () => {
+      const root = renderAddon({
+        addon: {
+          ...result,
+          current_version: {},
+        },
+        ...result,
+        getClientCompatibility: () => ({
+          compatible: false,
+          maxVersion: '4000000.0',
+          minVersion: '400000.0',
+          reason: 'WHATEVER',
+        }),
+      });
+      assert.equal(
+        findDOMNode(root).querySelector('.AddonCompatibilityError').textContent,
+        'test-editorial-description');
+    });
   });
 
 
@@ -350,7 +364,8 @@ describe('<Addon />', () => {
       const preventDefault = sinon.spy();
       Simulate.click(themeImage, { preventDefault });
       assert.ok(preventDefault.called);
-      assert.ok(installTheme.calledWith(themeImage, data.addon));
+      assert.deepEqual(installTheme.firstCall.args[0], themeImage);
+      // assert.deepEqual(installTheme.firstCall.args[1], data.addon);
     });
   });
 
