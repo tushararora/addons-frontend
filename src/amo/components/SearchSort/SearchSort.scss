@@ -1,10 +1,10 @@
-@import '~core/css/inc/mixins';
-@import '~core/css/inc/vars';
+@import "~core/css/inc/mixins";
+@import "~core/css/inc/vars";
 
 .SearchSort {
   background: $base-color;
-  border-radius: $border-radius-default;
   border: 0;
+  border-radius: $border-radius-default;
   margin: $padding-page ($padding-page * 2);
   overflow: hidden;
 }
@@ -12,7 +12,7 @@
 .SearchSort-toggle {
   @include button($background: $base-color, $color: $link-color);
 
-  // We do this so the button doesn't have weird edges on hover when the
+  // We do this so the button doesn"t have weird edges on hover when the
   // sort options are expanded.
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -28,9 +28,9 @@
   text-align: center;
 
   &::before {
-    background: url('~amo/img/icons/sort.svg') 50% 50% no-repeat;
+    background: url("~amo/img/icons/sort.svg") 50% 50% no-repeat;
     background-size: cover;
-    content: '';
+    content: "";
     display: inline-block;
     height: 16px;
     left: -8px;
@@ -61,10 +61,10 @@
 }
 
 .SearchSort-list {
+  align-items: center;
   display: none;
   margin: 0;
   padding: 0;
-  align-items: center;
   flex-flow: row;
   flex-wrap: wrap;
 

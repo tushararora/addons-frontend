@@ -9,8 +9,8 @@ $selector-padding: 10px;
 .LanguagePicker-selector {
   appearance: none;
   background:
-    url('../img/icons/globe.svg') no-repeat #{$selector-padding} 50%,
-    $base-color url('../img/icons/triangle-down.svg')
+    url("../img/icons/globe.svg") no-repeat #{$selector-padding} 50%,
+    $base-color url("../img/icons/triangle-down.svg")
     no-repeat calc(100% - #{$selector-padding}) 50%;
   background-size: 20px 20px, 15px 15px;
   border: 0;
@@ -24,8 +24,8 @@ $selector-padding: 10px;
 
   [dir=rtl] & {
     background:
-      url('../img/icons/globe.svg') no-repeat calc(100% - #{$selector-padding}) 50%,
-      $base-color url('../img/icons/triangle-down.svg')
+      url("../img/icons/globe.svg") no-repeat calc(100% - #{$selector-padding}) 50%,
+      $base-color url("../img/icons/triangle-down.svg")
       no-repeat #{$selector-padding} 50%;
     background-size: 20px 20px, 15px 15px;
     padding: $selector-padding #{$selector-padding * 3} #{$selector-padding - 1} $selector-padding;

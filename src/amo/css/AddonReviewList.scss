@@ -15,8 +15,8 @@
     }
 
     > h2 {
-      padding-top: 10px;
       margin: 0 0 5px;
+      padding-top: 10px;
     }
 
     > h3 {
@@ -28,9 +28,9 @@
     a:visited,
     a:hover,
     a:active {
-      text-decoration: none;
       color: $primary-font-color;
       font-weight: normal;
+      text-decoration: none;
     }
   }
 
@@ -43,18 +43,18 @@
   word-break: break-all;
 
   > h3 {
-    padding: 0;
     margin: 0;
+    padding: 0;
   }
 
   > p {
-    margin: 0 0 5px;
     font-size: $font-size-default;
+    margin: 0 0 5px;
   }
 
   .AddonReviewList-by-line {
-    display: flex;
     color: $sub-text-color;
+    display: flex;
     font-size: $font-size-s;
   }
 

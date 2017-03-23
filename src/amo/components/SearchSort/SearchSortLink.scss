@@ -1,12 +1,12 @@
-@import '~core/css/inc/mixins';
-@import '~core/css/inc/vars';
+@import "~core/css/inc/mixins";
+@import "~core/css/inc/vars";
 
 .SearchSortLink {
   @include button($background: $base-color, $color: $link-color);
 
   border-radius: 0;
-  font-size: $font-size-default;
   flex-grow: 1;
+  font-size: $font-size-default;
   padding: 6px 0;
   text-align: center;
 

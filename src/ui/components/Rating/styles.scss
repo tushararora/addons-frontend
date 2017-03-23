@@ -11,14 +11,14 @@
 }
 
 .Rating-choice {
-  background: url('./img/dim-star.svg') center/$rating-l-star-size no-repeat;
+  background: url("./img/dim-star.svg") center/$rating-l-star-size no-repeat;
   height: $rating-l-star-size + $rating-l-star-gutter;
   width: $rating-l-star-size + $rating-l-star-gutter;
 }
 
 .Rating--editable {
   .Rating-choice {
-    background-image: url('./img/outlined-star.svg');
+    background-image: url("./img/outlined-star.svg");
     cursor: pointer;
   }
 
@@ -30,22 +30,22 @@
   .Rating-star-group:hover .Rating-choice,
   // For keyboard navigation, make the focused star appear selected.
   .Rating-choice:focus {
-    background-image: url('./img/yellow-star.svg');
+    background-image: url("./img/yellow-star.svg");
   }
 
   // Second, de-select all stars to the right of the cursor.
   .Rating-choice:hover ~ .Rating-choice {
-    background-image: url('./img/outlined-star.svg');
+    background-image: url("./img/outlined-star.svg");
   }
 }
 
 .Rating-selected-star,
 .Rating--editable .Rating-selected-star {
-  background-image: url('./img/yellow-star.svg');
+  background-image: url("./img/yellow-star.svg");
 }
 
 .Rating-half-star {
-  background-image: url('./img/yellow-star-half.svg');
+  background-image: url("./img/yellow-star-half.svg");
 }
 
 .Rating--small .Rating-choice,
@@ -58,14 +58,14 @@
 
 .Rating--small-monochrome {
   .Rating-choice {
-    background-image: url('~ui/components/Icon/star-empty.svg');
+    background-image: url("~ui/components/Icon/star-empty.svg");
   }
 
   .Rating-selected-star {
-    background-image: url('~ui/components/Icon/star-full.svg');
+    background-image: url("~ui/components/Icon/star-full.svg");
   }
 
   .Rating-half-star {
-    background-image: url('~ui/components/Icon/star-half.svg');
+    background-image: url("~ui/components/Icon/star-half.svg");
   }
 }

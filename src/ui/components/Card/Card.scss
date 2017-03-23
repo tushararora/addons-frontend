@@ -37,20 +37,20 @@ $footer-padding: 10px;
 
   border-bottom-left-radius: $border-radius-default;
   border-bottom-right-radius: $border-radius-default;
+  font-variant: all-small-caps;
   margin-top: 1px;
   padding: 0;
   text-align: center;
-  font-variant: all-small-caps;
 
   a,
   a:active,
   a:hover,
   a:link,
   a:visited {
-    padding: $footer-padding;
     color: $link-color;
     display: block;
     font-weight: normal;
+    padding: $footer-padding;
     text-decoration: none;
   }
 }

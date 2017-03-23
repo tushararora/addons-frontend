@@ -32,11 +32,11 @@
   }
 
   &::before {
-    background: url('../img/icons/fox-puzzle.svg') no-repeat 50% 50%;
-    content: '';
+    background: url("../img/icons/fox-puzzle.svg") no-repeat 50% 50%;
+    content: "";
     display: inline-block;
-    min-height: 50px;
     margin-right: 10px;
+    min-height: 50px;
     min-width: 50px;
 
     [dir=rtl] & {
@@ -47,8 +47,8 @@
 
 .MastHead-top-row {
   display: flex;
-  margin: 0 15px;
   justify-content: space-between;
+  margin: 0 15px;
 }
 
 .Button.MastHead-auth-button {

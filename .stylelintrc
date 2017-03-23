@@ -1,23 +1,28 @@
 {
-  "extends": "stylelint-config-standard",
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-suitcss"
+  ],
   "rules": {
     "block-closing-brace-newline-after": ["always", {
       "ignoreAtRules": ["if", "else"],
     }],
+    "at-rule-empty-line-before": false,
     "at-rule-no-unknown": [true, {
       "ignoreAtRules": [
         "content",
-        "else", 
+        "else",
         "for",
-        "if", 
+        "if",
         "include",
         "mixin",
         "warn",
       ],
     }],
+    "function-url-quotes": ["always"],
     "max-nesting-depth": [3, {
       "ignore": ["at-rules-without-declaration-blocks"],
     }],
-    "function-url-quotes": ["always"],
+    "rule-empty-line-before": false,
   }
 }

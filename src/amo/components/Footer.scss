@@ -8,9 +8,9 @@
   padding: 10px 10px 20px;
 
   &::after {
-    background: url('../img/icons/fox-puzzle-footer.svg') no-repeat 50% 50%;
+    background: url("../img/icons/fox-puzzle-footer.svg") no-repeat 50% 50%;
     background-size: 25px 25px;
-    content: '';
+    content: "";
     display: block;
     height: 25px;
     margin: 5px 0 0;

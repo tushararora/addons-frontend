@@ -1,53 +1,53 @@
-@import './vars';
+@import "./vars";
 
 /* Font mixins. Changes here affect *alL* apps */
 
 @mixin font-light() {
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 300;
+  font-family: "Fira Sans", sans-serif;
   font-style: normal;
+  font-weight: 300;
 }
 
 @mixin font-light-italic() {
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 300;
+  font-family: "Fira Sans", sans-serif;
   font-style: normal;
+  font-weight: 300;
 }
 
 @mixin font-regular() {
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 400;
+  font-family: "Fira Sans", sans-serif;
   font-style: normal;
+  font-weight: 400;
 }
 
 @mixin font-regular-italic() {
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 400;
+  font-family: "Fira Sans", sans-serif;
   font-style: italic;
+  font-weight: 400;
 }
 
 @mixin font-medium() {
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 500;
+  font-family: "Fira Sans", sans-serif;
   font-style: normal;
+  font-weight: 500;
 }
 
 @mixin font-medium-italic() {
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 500;
+  font-family: "Fira Sans", sans-serif;
   font-style: italic;
+  font-weight: 500;
 }
 
 @mixin font-bold() {
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 600;
+  font-family: "Fira Sans", sans-serif;
   font-style: normal;
+  font-weight: 600;
 }
 
 @mixin font-bold-italic() {
-  font-family: 'Fira Sans', sans-serif;
-  font-weight: 600;
+  font-family: "Fira Sans", sans-serif;
   font-style: italic;
+  font-weight: 600;
 }
 
 /* Shared mixins. Bear in mind changes here impact *all* apps. */
@@ -70,24 +70,28 @@
   cursor: not-allowed;
 }
 
-/* stylelint-disable at-rule-empty-line-before, media-feature-no-missing-punctuation  */
+/*
+  stylelint-disable
+  at-rule-empty-line-before,
+  media-feature-no-missing-punctuation
+*/
 @mixin respond-to($breakpoint) {
   @if map-has-key($breakpoints, $breakpoint) {
     @media #{map-get($breakpoints, $breakpoint)} {
       @content;
     }
   } @else {
-    @warn 'Unfortunately, no value could be retrieved from `#{$breakpoint}`. '
-      + 'Please make sure it is defined in `$breakpoints` map.';
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+      + "Please make sure it is defined in `$breakpoints` map.";
   }
 }
 
 /* Arrows */
 $default-arrow-margin: 3px;
 @mixin arrow($margin: $default-arrow-margin) {
-  background: url('~amo/img/icons/arrow.svg') 50% 50% no-repeat;
+  background: url("~amo/img/icons/arrow.svg") 50% 50% no-repeat;
   border-radius: $border-radius-m;
-  content: '';
+  content: "";
   display: inline-block;
   height: 16px;
   margin-right: -$margin * 2;
@@ -151,7 +155,7 @@ $default-arrow-margin: 3px;
 }
 
 @mixin arrow-link-right-aligned() {
-  background-image: url('~amo/img/icons/arrow-link-color.svg');
+  background-image: url("~amo/img/icons/arrow-link-color.svg");
   margin-right: 0;
   position: absolute;
   right: 8px;
@@ -169,8 +173,8 @@ $color: $text-color-message) {
   @include font-regular();
 
   background: $background;
-  border-radius: $border-radius-default;
   border: 0;
+  border-radius: $border-radius-default;
   color: $color;
   cursor: pointer;
   display: inline-block;
@@ -306,6 +310,6 @@ $color: $text-color-message) {
 
 @mixin addonSection() {
   background: $base-color;
-  padding: 10px;
   overflow: hidden;
+  padding: 10px;
 }

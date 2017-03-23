@@ -12,8 +12,8 @@
 }
 
 .HomePage-welcome-text {
-  text-align: center;
   margin: 0 0 20px;
+  text-align: center;
 }
 
 .HomePage-welcome-links {
@@ -27,9 +27,9 @@
 }
 
 .HomePage-subheading {
-  text-align: center;
-  margin-top: 18px;
   margin-bottom: -10px;
+  margin-top: 18px;
+  text-align: center;
 }
 
 .HomePage-category-list {
@@ -57,10 +57,10 @@
   width: 30%;
 
   a:link {
-    font-size: 10px;
-    text-decoration: none;
-    padding-top: 70%;
     display: block;
+    font-size: 10px;
+    padding-top: 70%;
+    text-decoration: none;
   }
 
   span {
@@ -106,69 +106,69 @@
   }
 
   &::before {
-    content: '';
+    content: "";
     display: inline-block;
-    width: 16px;
     height: 16px;
     margin: 0 5px;
+    width: 16px;
   }
 }
 
 .HomePage-extensions-link:link::before {
-  background: url('../img/icons/addon-outline.svg') no-repeat 50% 50%;
+  background: url("../img/icons/addon-outline.svg") no-repeat 50% 50%;
   background-size: cover;
 }
 
 .HomePage-themes-link:link::before {
-  background: url('../img/icons/theme-outline.svg') no-repeat 50% 50%;
+  background: url("../img/icons/theme-outline.svg") no-repeat 50% 50%;
   background-size: cover;
 }
 
 .HomePage-block-ads {
-  background-image: url('../img/home/block-ads.svg');
+  background-image: url("../img/home/block-ads.svg");
 }
 
 .HomePage-screenshot {
-  background-image: url('../img/home/screenshot.svg');
+  background-image: url("../img/home/screenshot.svg");
 }
 
 .HomePage-find-news {
-  background-image: url('../img/home/find-news.svg');
+  background-image: url("../img/home/find-news.svg");
   background-size: 40% auto;
 }
 
 .HomePage-shop-online {
-  background-image: url('../img/home/shop-online.svg');
+  background-image: url("../img/home/shop-online.svg");
 }
 
 .HomePage-be-social {
-  background-image: url('../img/home/be-social.svg');
+  background-image: url("../img/home/be-social.svg");
 }
 
 .HomePage-play-games {
-  background-image: url('../img/home/play-games.svg');
+  background-image: url("../img/home/play-games.svg");
 }
 
 .HomePage-wild {
-  background-image: url('../img/home/wild.svg');
+  background-image: url("../img/home/wild.svg");
 }
 
 .HomePage-abstract {
-  background-image: url('../img/home/abstract.svg');
+  background-image: url("../img/home/abstract.svg");
 }
 
 .HomePage-holiday {
-  background-image: url('../img/home/holiday.svg');
+  background-image: url("../img/home/holiday.svg");
 }
 
 .HomePage-scenic {
-  background-image: url('../img/home/scenic.svg');
+  background-image: url("../img/home/scenic.svg");
 }
 
 .HomePage-sporty {
-  background-image: url('../img/home/sporty.svg');
+  background-image: url("../img/home/sporty.svg");
 }
 
 .HomePage-solid {
-  background-image: url('../img/home/solid.svg');
+  background-image: url("../img/home/solid.svg");
 }
