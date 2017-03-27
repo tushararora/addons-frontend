@@ -3,9 +3,9 @@ import config from 'config';
 
 import {
   ADDON_TYPE_THEME,
-  CATEGORIES_GET,
+  CATEGORIES_FETCH,
   CATEGORIES_LOAD,
-  CATEGORIES_FAILED,
+  CATEGORIES_FAIL,
 } from 'core/constants';
 import log from 'core/logger';
 
@@ -25,12 +25,12 @@ export default function categories(state = initialState, action) {
   const { payload } = action;
 
   switch (action.type) {
-    case CATEGORIES_GET:
+    case CATEGORIES_FETCH:
       return { ...state, ...payload, loading: true };
     case CATEGORIES_LOAD:
       {
         const categoryList = emptyCategoryList();
-        payload.result.forEach((result) => {
+        Object.values(payload.result).forEach((result) => {
           // If the API returns data for an application we don't support,
           // we'll ignore it for now.
           if (!categoryList[result.application]) {
@@ -75,8 +75,13 @@ export default function categories(state = initialState, action) {
           categories: categoryList,
         };
       }
-    case CATEGORIES_FAILED:
-      return { ...initialState, ...payload, error: true };
+    case CATEGORIES_FAIL:
+      return {
+        ...initialState,
+        ...payload,
+        loading: false,
+        error: payload.error,
+      };
     default:
       return state;
   }

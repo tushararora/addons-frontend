@@ -30,11 +30,13 @@ const PROMISE_PREFIXES = {
 export function middleware({
   _config = config, _createLogger = createLogger,
   _window = typeof window !== 'undefined' ? window : null,
+  sagaMiddleware = () => { return (next) => (action) => next(action); },
 } = {}) {
   if (_config.get('isDevelopment')) {
     return compose(
       applyMiddleware(
         _createLogger(),
+        sagaMiddleware,
         loadingBarMiddleware(PROMISE_PREFIXES),
       ),
       _window && _window.devToolsExtension ?
@@ -44,6 +46,7 @@ export function middleware({
 
   return compose(
     applyMiddleware(
+      sagaMiddleware,
       loadingBarMiddleware(PROMISE_PREFIXES),
     ),
     (createStore) => createStore,

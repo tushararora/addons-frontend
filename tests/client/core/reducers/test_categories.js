@@ -24,10 +24,10 @@ describe('categories reducer', () => {
     assert.equal(error, false);
   });
 
-  describe('CATEGORIES_GET', () => {
+  describe('CATEGORIES_FETCH', () => {
     it('sets loading', () => {
       const state = categories(initialState,
-        { type: 'CATEGORIES_GET', payload: { loading: true } });
+        { type: 'CATEGORIES_FETCH', payload: { loading: true } });
       assert.deepEqual(state.categories, {
         android: {}, firefox: {},
       });
@@ -185,13 +185,13 @@ describe('categories reducer', () => {
     });
   });
 
-  describe('CATEGORIES_FAILED', () => {
+  describe('CATEGORIES_FAIL', () => {
     it('sets error to be true', () => {
       const error = true;
       const loading = false;
 
       const state = categories(initialState, {
-        type: 'CATEGORIES_FAILED', payload: { error, loading },
+        type: 'CATEGORIES_FAIL', payload: { error, loading },
       });
       assert.deepEqual(state, {
         categories: emptyCategoryList(), error, loading,

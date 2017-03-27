@@ -1,14 +1,14 @@
 import * as actions from 'core/actions/categories';
 
 
-describe('CATEGORIES_GET', () => {
+describe('CATEGORIES_FETCH', () => {
   const params = {
     loading: true,
   };
   const action = actions.categoriesGet(params);
 
   it('sets the type', () => {
-    assert.equal(action.type, 'CATEGORIES_GET');
+    assert.equal(action.type, 'CATEGORIES_FETCH');
   });
 
   it('sets the query', () => {
@@ -33,14 +33,14 @@ describe('CATEGORIES_LOAD', () => {
   });
 });
 
-describe('CATEGORIES_FAILED', () => {
+describe('CATEGORIES_FAIL', () => {
   const params = {
     loading: false,
   };
   const action = actions.categoriesFail(params);
 
   it('sets the type', () => {
-    assert.equal(action.type, 'CATEGORIES_FAILED');
+    assert.equal(action.type, 'CATEGORIES_FAIL');
   });
 
   it('sets the payload', () => {

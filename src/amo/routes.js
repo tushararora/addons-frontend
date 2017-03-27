@@ -12,7 +12,7 @@ import HandleLogin from 'core/containers/HandleLogin';
 
 import AddonReviewList from './components/AddonReviewList';
 import App from './containers/App';
-import CategoryList from './containers/CategoryList';
+import Categories from './components/Categories';
 import CategoryPage from './containers/CategoryPage';
 import FeaturedAddons from './components/FeaturedAddons';
 import LandingPage from './components/LandingPage';
@@ -37,7 +37,7 @@ export default (
     <Route path="users/:userAction/" component={NotFound} />
     {/* https://github.com/mozilla/addons-frontend/issues/1975 */}
     <Route path="user/:user/" component={NotFound} />
-    <Route path=":visibleAddonType/categories/" component={CategoryList} />
+    <Route path=":visibleAddonType/categories/" component={Categories} />
     <Route path=":visibleAddonType/featured/" component={FeaturedAddons} />
     <Route path=":visibleAddonType/:slug/" component={CategoryPage} />
     <Route path="/api/v3/accounts/authenticate/" component={HandleLogin} />
