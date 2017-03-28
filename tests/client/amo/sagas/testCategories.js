@@ -10,11 +10,9 @@ const state = { categories };
 const getState = () => state;
 
 describe('categoriesSaga', () => {
-  it('', () => {
+  it('should get Api from state then make API request to categories', () => {
     // const generator = categoriesSaga(getState);
     const fetchCategoriesGenerator = fetchCategories();
-
-    const response = { results: categories };
 
     let next = fetchCategoriesGenerator.next();
     const api = next.value;
@@ -24,11 +22,29 @@ describe('categoriesSaga', () => {
     assert.deepEqual(next.value, call(categoriesApi, { api: undefined }),
       'must yield categoriesApi');
 
-    // actions.categoriesFetch(response)
-    // next = fetchCategoriesGenerator.next(categories);
-    // assert.deepEqual(next.value, put(actions.categoriesLoad(categories)),
-    //   'must yield actions.receiveProducts(products)'
-    // );
+    next = fetchCategoriesGenerator.next(categories);
+    assert.deepEqual(next.value, put(actions.categoriesLoad(categories)),
+      'must yield categoriesLoad(categories)');
+  });
+
+  it('should dispatch fail if API request fails', () => {
+    // const generator = categoriesSaga(getState);
+    const fetchCategoriesGenerator = fetchCategories();
+
+    let next = fetchCategoriesGenerator.next();
+    const api = next.value;
+    assert.deepEqual(api, select(getApi), 'must yield getApi');
+
+    next = fetchCategoriesGenerator.next();
+    assert.deepEqual(next.value, call(categoriesApi, { api: undefined }),
+      'must yield categoriesApi');
+
+    // No response is defined so this will fail.
+    const error = new TypeError('response is undefined');
+    next = fetchCategoriesGenerator.next();
+    assert.deepEqual(next.value,
+      put(actions.categoriesFail(error)),
+      'must yield categoriesFail(error)');
   });
 });
 
