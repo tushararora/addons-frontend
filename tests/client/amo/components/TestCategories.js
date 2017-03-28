@@ -7,7 +7,8 @@ import {
 import { Provider } from 'react-redux';
 
 import createStore from 'amo/store';
-import Categories from 'amo/components/Categories';
+import Categories, { mapStateToProps } from 'amo/components/Categories';
+import { ADDON_TYPE_THEME } from 'core/constants';
 import { getFakeI18nInst } from 'tests/client/helpers';
 
 
@@ -87,4 +88,42 @@ describe('Categories', () => {
   //
   //   assert.equal(root.textContent, 'Failed to load categories.');
   // });
+});
+
+describe('mapStateToProps', () => {
+  it('maps state to props', () => {
+    const props = mapStateToProps({
+      api: { clientApp: 'android', lang: 'pt' },
+      categories: {
+        categories: {
+          android: {
+            [ADDON_TYPE_THEME]: {
+              nature: {
+                name: 'Nature',
+                slug: 'nature',
+              },
+            },
+          },
+          firefox: {},
+        },
+        error: false,
+        loading: true,
+      },
+    }, {
+      params: { visibleAddonType: 'themes' },
+    });
+
+    assert.deepEqual(props, {
+      addonType: ADDON_TYPE_THEME,
+      categories: {
+        nature: {
+          name: 'Nature',
+          slug: 'nature',
+        },
+      },
+      clientApp: 'android',
+      error: false,
+      loading: true,
+    });
+  });
 });
