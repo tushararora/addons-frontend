@@ -13,7 +13,7 @@ import {
 export const getApi = (state) => state.api;
 
 // worker Saga: will be fired on every CATEGORIES_FETCH action.
-function* fetchCategories() {
+export function* fetchCategories() {
   try {
     const api = yield select(getApi);
     const response = yield call(categoriesApi, { api });
@@ -27,7 +27,7 @@ function* fetchCategories() {
   Starts fetchUser on each dispatched `categoriesFetch` action.
   Allows concurrent fetches of categoriesFetch.
 */
-function* categoriesSaga() {
+export function* categoriesSaga() {
   yield takeEvery(categoriesFetch().type, fetchCategories);
 }
 
