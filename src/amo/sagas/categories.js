@@ -25,8 +25,6 @@ export function* fetchCategories() {
   Starts fetchUser on each dispatched `categoriesFetch` action.
   Allows concurrent fetches of categoriesFetch.
 */
-export function* categoriesSaga() {
+export default function* categoriesSaga() {
   yield takeEvery(categoriesFetch().type, fetchCategories);
 }
-
-export default categoriesSaga;
