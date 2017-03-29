@@ -7,8 +7,9 @@ import {
 import { Provider } from 'react-redux';
 
 import createStore from 'amo/store';
-import Categories, { mapStateToProps } from 'amo/components/Categories';
+import { CategoriesBase, mapStateToProps } from 'amo/components/Categories';
 import { ADDON_TYPE_THEME } from 'core/constants';
+import I18nProvider from 'core/i18n/Provider';
 import { getFakeI18nInst } from 'tests/client/helpers';
 
 
@@ -37,57 +38,61 @@ describe('Categories', () => {
       api: { clientApp: 'android', lang: 'fr' },
       categories,
     };
+    const fakeDispatch = sinon.stub();
 
     return findDOMNode(findRenderedComponentWithType(renderIntoDocument(
       <Provider store={createStore(initialState)}>
-        <Categories i18n={getFakeI18nInst()} {...baseProps} {...props} />
+        <I18nProvider i18n={getFakeI18nInst()}>
+          <CategoriesBase dispatch={fakeDispatch} i18n={getFakeI18nInst()}
+            {...baseProps} {...props} />
+        </I18nProvider>
       </Provider>
-    ), Categories));
+    ), CategoriesBase));
   }
 
-  // it('renders Categories', () => {
-  //   const root = render({
-  //     addonType: 'extension',
-  //     error: false,
-  //     loading: false,
-  //   });
-  //
-  //   assert.equal(root.querySelector('.Categories-list').textContent,
-  //     'GamesTravel');
-  // });
-  //
-  // it('renders loading when loading', () => {
-  //   const root = render({
-  //     addonType: 'extension',
-  //     categories: [],
-  //     error: false,
-  //     loading: true,
-  //   });
-  //
-  //   assert.include(root.textContent, 'Loading');
-  // });
-  //
-  // it('renders a message when there are no categories', () => {
-  //   const root = render({
-  //     addonType: 'extension',
-  //     categories: [],
-  //     error: false,
-  //     loading: false,
-  //   });
-  //
-  //   assert.equal(root.textContent, 'No categories found.');
-  // });
-  //
-  // it('renders an error', () => {
-  //   const root = render({
-  //     addonType: 'extension',
-  //     categories: [],
-  //     error: true,
-  //     loading: false,
-  //   });
-  //
-  //   assert.equal(root.textContent, 'Failed to load categories.');
-  // });
+  it('renders Categories', () => {
+    const root = render({
+      addonType: 'extension',
+      error: false,
+      loading: false,
+    });
+
+    assert.equal(root.querySelector('.Categories-list').textContent,
+      'GamesTravel');
+  });
+
+  it('renders loading when loading', () => {
+    const root = render({
+      addonType: 'extension',
+      categories: [],
+      error: false,
+      loading: true,
+    });
+
+    assert.include(root.textContent, 'Loading');
+  });
+
+  it('renders a message when there are no categories', () => {
+    const root = render({
+      addonType: 'extension',
+      categories: [],
+      error: false,
+      loading: false,
+    });
+
+    assert.equal(root.textContent, 'No categories found.');
+  });
+
+  it('renders an error', () => {
+    const root = render({
+      addonType: 'extension',
+      categories: [],
+      error: true,
+      loading: false,
+    });
+
+    assert.equal(root.textContent, 'Failed to load categories.');
+  });
 });
 
 describe('mapStateToProps', () => {

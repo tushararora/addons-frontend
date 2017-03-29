@@ -1,6 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
 
-import { fetchCategories, getApi } from 'amo/sagas/categories';
+import { fetchCategories } from 'amo/sagas/categories';
+import { getApi } from 'amo/sagas/utils';
 import * as actions from 'core/actions/categories';
 import { categories as categoriesApi } from 'core/api';
 

@@ -7,8 +7,8 @@ import {
 } from 'core/actions/categories';
 import { categories as categoriesApi } from 'core/api';
 
+import { getApi } from './utils';
 
-export const getApi = (state) => state.api;
 
 // worker Saga: will be fired on every CATEGORIES_FETCH action.
 export function* fetchCategories() {
